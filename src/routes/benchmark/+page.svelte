@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { Result } from 'effect';
 	import { decodeConfig, generate, parse, simulate, solve, type Run } from '#lib/game.js';
 	import ConfigStep from './ConfigStep.svelte';
@@ -11,6 +12,16 @@
 
 	let form = $state({ gridSize: 14, obstacleCount: 14, foodCount: 20, seed: 1 });
 	let response = $state('');
+
+	// persist the config across reloads; loaded after mount so prerendered markup hydrates cleanly
+	const CONFIG_KEY = 'snakebench:config';
+	onMount(() => {
+		try {
+			const saved = JSON.parse(localStorage.getItem(CONFIG_KEY) ?? '{}');
+			for (const k of Object.keys(form) as (keyof typeof form)[]) if (typeof saved[k] === 'number') form[k] = saved[k];
+		} catch {}
+	});
+	$effect(() => localStorage.setItem(CONFIG_KEY, JSON.stringify(form)));
 
 	const decoded = $derived(decodeConfig(form));
 	const game = $derived(Result.isSuccess(decoded) ? generate(decoded.success) : null);

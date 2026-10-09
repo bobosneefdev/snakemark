@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { TIERS } from '#lib/game.js';
+	import { SETTINGS } from '#lib/game.js';
 
 	const toc = [
 		['overview', 'Overview'],
@@ -8,7 +8,7 @@
 		['commands', 'Command syntax'],
 		['rules', 'Rules and edge cases'],
 		['scoring', 'Scoring'],
-		['tiers', 'Difficulty tiers'],
+		['settings', 'Fixed settings'],
 		['determinism', 'Determinism']
 	] as const;
 </script>
@@ -44,7 +44,7 @@
 		<section id="flow">
 			<h2>Benchmark flow</h2>
 			<ol>
-				<li><strong>Configure.</strong> Choose grid size, obstacle count, food count and seed. A live preview shows the exact board.</li>
+				<li><strong>Seed.</strong> Pick a seed. Everything else is fixed. A live preview shows the exact board.</li>
 				<li><strong>Prompt.</strong> Copy the generated prompt into any LLM, then paste its answer back.</li>
 				<li><strong>Simulate.</strong> Watch the plan play out at 1×, 2× or 5×, or skip straight to the end.</li>
 				<li><strong>Score.</strong> See food collected, survival, efficiency and how it stacks up against the reference solver.</li>
@@ -57,7 +57,6 @@
 				<li>Cells are <code>(x,y)</code>. <code>(0,0)</code> is the top-left. <code>x</code> grows right, <code>y</code> grows down.</li>
 				<li>The snake starts with length 3 at the centre column, head at <code>(⌊n/2⌋, ⌊n/2⌋)</code>, body trailing downward, facing up.</li>
 				<li>Obstacles never sit on the snake or the two cells straight ahead of it, and never cut off part of the board.</li>
-				<li>Obstacles are capped at 20% of cells.</li>
 			</ul>
 		</section>
 
@@ -112,21 +111,23 @@
 			</div>
 		</section>
 
-		<section id="tiers">
-			<h2>Difficulty tiers</h2>
-			<p>Tiers are presets. Report results per tier, averaged across several seeds.</p>
+		<section id="settings">
+			<h2>Fixed settings</h2>
+			<p>
+				Every game uses the same settings. Only the seed changes, so any two results on the same seed
+				can be compared directly. The settings are deliberately brutal so that even the strongest
+				models have room to improve. Report results averaged across several seeds.
+			</p>
 			<div class="overflow-x-auto">
 				<table class="table table-sm">
-					<thead><tr><th>Tier</th><th>Grid</th><th>Obstacles</th><th>Food</th></tr></thead>
+					<thead><tr><th>Grid</th><th>Obstacles</th><th>Food</th><th>Move limit</th></tr></thead>
 					<tbody>
-						{#each Object.entries(TIERS) as [name, t] (name)}
-							<tr>
-								<td class="capitalize">{name}</td>
-								<td class="font-mono">{t.gridSize}×{t.gridSize}</td>
-								<td class="font-mono">{t.obstacleCount}</td>
-								<td class="font-mono">{t.foodCount}</td>
-							</tr>
-						{/each}
+						<tr>
+							<td class="font-mono">{SETTINGS.gridSize}×{SETTINGS.gridSize}</td>
+							<td class="font-mono">{SETTINGS.obstacleCount}</td>
+							<td class="font-mono">{SETTINGS.foodCount}</td>
+							<td class="font-mono">{SETTINGS.foodCount * SETTINGS.gridSize * 4}</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -135,10 +136,9 @@
 		<section id="determinism">
 			<h2>Determinism</h2>
 			<p>
-				Boards and food come from a seeded <code>mulberry32</code> generator, so the same grid size,
-				obstacle count, food count and seed always build the same game in every browser. The
-				simulator has no randomness. To compare models fairly, give each one the same settings and
-				seed, in a fresh conversation, with the prompt unchanged.
+				Boards and food come from a seeded <code>mulberry32</code> generator, so the same seed
+				always builds the same game in every browser. The simulator has no randomness. To compare
+				models fairly, give each one the same seed, in a fresh conversation, with the prompt unchanged.
 			</p>
 		</section>
 	</article>

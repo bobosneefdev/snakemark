@@ -57,7 +57,7 @@
 				></textarea>
 			</div>
 		</details>
-		<button type="button" class="btn self-start btn-ghost btn-sm" onclick={onback}>← Change settings</button>
+		<button type="button" class="btn self-start btn-ghost btn-sm" onclick={onback}>← Change seed</button>
 	</div>
 
 	<form

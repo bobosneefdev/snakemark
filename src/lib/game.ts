@@ -10,32 +10,18 @@ const DX = [0, 1, 0, -1] as const;
 const DY = [-1, 0, 1, 0] as const;
 const DIR_NAMES = ['UP (toward y−1)', 'RIGHT (toward x+1)', 'DOWN (toward y+1)', 'LEFT (toward x−1)'];
 
-export const maxObstacles = (gridSize: number) => Math.floor(gridSize * gridSize * 0.2);
+/** Fixed for every game so results from the same seed are always comparable. Only the seed varies. */
+export const SETTINGS = { gridSize: 32, obstacleCount: 256, foodCount: 512 } as const;
 
-const int = (minimum: number, maximum: number) => Schema.Int.check(Schema.isBetween({ minimum, maximum }));
+export interface Config {
+	gridSize: number;
+	obstacleCount: number;
+	foodCount: number;
+	seed: number;
+}
 
-export const Config = Schema.Struct({
-	gridSize: int(6, 32),
-	obstacleCount: int(0, maxObstacles(32)),
-	foodCount: int(1, 256),
-	seed: int(0, 2 ** 32 - 1)
-}).check(
-	Schema.makeFilter(
-		(c) =>
-			c.obstacleCount <= maxObstacles(c.gridSize) ||
-			`At most ${maxObstacles(c.gridSize)} obstacles fit on a ${c.gridSize}×${c.gridSize} board`
-	)
-);
-export interface Config extends Schema.Schema.Type<typeof Config> {}
-export const decodeConfig = Schema.decodeUnknownResult(Config);
-
-export const TIERS = {
-	easy: { gridSize: 18, obstacleCount: 36, foodCount: 35 },
-	medium: { gridSize: 24, obstacleCount: 90, foodCount: 60 },
-	hard: { gridSize: 28, obstacleCount: 140, foodCount: 80 },
-	brutal: { gridSize: 32, obstacleCount: maxObstacles(32), foodCount: 256 }
-} as const;
-export type Tier = keyof typeof TIERS;
+export const Seed = Schema.Int.check(Schema.isBetween({ minimum: 0, maximum: 2 ** 32 - 1 }));
+export const decodeSeed = Schema.decodeUnknownResult(Seed);
 
 export interface Game {
 	config: Config;

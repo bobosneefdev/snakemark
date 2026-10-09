@@ -2,10 +2,10 @@
 	import Board from '#lib/Board.svelte';
 	import { Playback } from '#lib/playback.svelte.js';
 	import { reveal } from '#lib/reveal.js';
-	import { generate, parse, simulate, solve, TIERS } from '#lib/game.js';
+	import { generate, parse, simulate, solve } from '#lib/game.js';
 
 	// A fixed demo game so the hero looks the same for everyone.
-	const game = generate({ ...TIERS.medium, seed: 2026 });
+	const game = generate({ gridSize: 14, obstacleCount: 14, foodCount: 20, seed: 2026 });
 	const parsed = parse(solve(game));
 	const run = simulate(game, parsed.ok ? parsed.commands : null);
 	const demo = new Playback(run, 14);

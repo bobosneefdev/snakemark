@@ -10,7 +10,7 @@
 	const STAGES = ['Configure', 'Prompt', 'Simulate', 'Score'] as const;
 	let stage = $state(0);
 
-	let form = $state({ gridSize: 14, obstacleCount: 14, foodCount: 20, seed: 1 });
+	let form = $state({ gridSize: 18, obstacleCount: 36, foodCount: 35, seed: 1 });
 	let response = $state('');
 
 	// persist the config across reloads; loaded after mount so prerendered markup hydrates cleanly

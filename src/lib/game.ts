@@ -30,10 +30,10 @@ export interface Config extends Schema.Schema.Type<typeof Config> {}
 export const decodeConfig = Schema.decodeUnknownResult(Config);
 
 export const TIERS = {
-	easy: { gridSize: 10, obstacleCount: 4, foodCount: 10 },
-	medium: { gridSize: 14, obstacleCount: 14, foodCount: 20 },
-	hard: { gridSize: 18, obstacleCount: 36, foodCount: 35 },
-	brutal: { gridSize: 24, obstacleCount: 90, foodCount: 60 }
+	easy: { gridSize: 18, obstacleCount: 36, foodCount: 35 },
+	medium: { gridSize: 24, obstacleCount: 90, foodCount: 60 },
+	hard: { gridSize: 28, obstacleCount: 140, foodCount: 80 },
+	brutal: { gridSize: 32, obstacleCount: maxObstacles(32), foodCount: 100 }
 } as const;
 export type Tier = keyof typeof TIERS;
 

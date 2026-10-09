@@ -4,27 +4,31 @@
  * retried on the next run; only real answers and timeouts are recorded.
  */
 import { BunRuntime, BunServices } from '@effect/platform-bun';
-import { Config, Duration, Effect, FileSystem, Option, Redacted, Schema, Semaphore } from 'effect';
+import { Config, Duration, Effect, FileSystem, Option, Redacted, Result, Schema, Semaphore } from 'effect';
 import { FetchHttpClient, HttpClient } from 'effect/http';
 import { ChildProcess, ChildProcessSpawner } from 'effect/process';
-import { buildPrompt, generate, grade, parse, simulate, solve, SETTINGS } from '@snakebench/core';
+import { buildPrompt, decodeSeed, generate, grade, parse, simulate, solve, SETTINGS } from '@snakebench/core';
 import { decodeResults, entryKey, Results, type Entry, type Provider } from '@snakebench/core/results';
 import { Catalog, candidates, readEvents, type Candidate } from './opencode';
 import { runSandboxed } from './sandbox';
-import { LEADERBOARD_SEED } from './seed';
 
 const RESULTS = Bun.resolveSync('@snakebench/core/results.json', import.meta.dir);
 const CATALOG_URL = 'https://models.opencode.ai/api.json';
 
-const game = generate({ ...SETTINGS, seed: LEADERBOARD_SEED });
-const prompt = buildPrompt(game);
-const play = (response: string) => {
-	const parsed = parse(response);
-	return simulate(game, parsed.ok ? parsed.commands : null);
-};
-const reference = play(solve(game));
-
 const main = Effect.gen(function* () {
+	// Private on purpose: the site discloses the settings but never the seed, so nobody can regenerate the
+	// board and tune against it. Comes from the LEADERBOARD_SEED repo secret; never log or commit it.
+	// Changing it makes stored results incomparable, so reset packages/core/results.json too.
+	const seed = Number(Redacted.value(yield* Config.Redacted('LEADERBOARD_SEED')));
+	if (Result.isFailure(decodeSeed(seed))) return yield* Effect.die('LEADERBOARD_SEED must be an integer from 0 to 2^32 - 1');
+	const game = generate({ ...SETTINGS, seed });
+	const prompt = buildPrompt(game);
+	const play = (response: string) => {
+		const parsed = parse(response);
+		return simulate(game, parsed.ok ? parsed.commands : null);
+	};
+	const reference = play(solve(game));
+
 	const fs = yield* FileSystem.FileSystem;
 	const spawner = yield* ChildProcessSpawner.ChildProcessSpawner;
 

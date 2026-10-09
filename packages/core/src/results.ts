@@ -1,5 +1,5 @@
 import { Schema } from 'effect';
-import { EndReason, Grade } from './game';
+import { EndReason, Grade, score } from './game';
 
 /** Leaderboard data written by apps/worker and read by the site at build time. */
 export const Provider = Schema.Literals(['opencode', 'nvidia', 'openrouter']);
@@ -34,6 +34,6 @@ export const decodeResults = Schema.decodeUnknownSync(Results);
 
 export const entryKey = (e: { provider: Provider; model: string }) => `${e.provider}/${e.model}`;
 
-/** Most food first; fewer moves breaks ties, same as the game's own goal. */
+/** Highest score (food, minus the crash penalty) first; fewer moves breaks ties, same as the game's own goal. */
 export const rank = (entries: readonly Entry[]) =>
-	[...entries].sort((a, b) => b.food - a.food || a.steps - b.steps || a.name.localeCompare(b.name));
+	[...entries].sort((a, b) => score(b) - score(a) || a.steps - b.steps || a.name.localeCompare(b.name));

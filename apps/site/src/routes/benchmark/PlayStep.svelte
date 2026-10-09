@@ -9,11 +9,16 @@
 	// ~8 steps/s at 1× reads well on any board size; the frame rate itself follows the display
 	// svelte-ignore state_referenced_locally
 	const pb = new Playback(run, 8);
-	pb.onend = () => setTimeout(ondone, 900);
+	let hold: ReturnType<typeof setTimeout> | undefined;
+	// hold on the final frame, unless the user restarted playback in the meantime
+	pb.onend = () => (hold = setTimeout(() => pb.done && ondone(), 900));
 
 	$effect(() => {
 		pb.play();
-		return pb.destroy;
+		return () => {
+			clearTimeout(hold);
+			pb.destroy();
+		};
 	});
 
 	const speeds = ['1', '2', '5'];

@@ -1,6 +1,8 @@
 <script lang="ts">
 	import './layout.css';
 	import favicon from '#lib/assets/favicon.svg';
+	import geist from '@fontsource-variable/geist/files/geist-latin-wght-normal.woff2?url';
+	import geistMono from '@fontsource-variable/geist-mono/files/geist-mono-latin-wght-normal.woff2?url';
 	import type { Component } from 'svelte';
 	import { loadShader } from '#lib/gpu.js';
 	import { page } from '$app/state';
@@ -21,6 +23,8 @@
 
 <svelte:head>
 	<link rel="icon" href={favicon} />
+	<link rel="preload" as="font" type="font/woff2" href={geist} crossorigin="anonymous" />
+	<link rel="preload" as="font" type="font/woff2" href={geistMono} crossorigin="anonymous" />
 	<meta name="theme-color" content="#0b120e" />
 </svelte:head>
 
@@ -32,7 +36,7 @@
 <div aria-hidden="true" class="pointer-events-none fixed inset-0 -z-20 bg-[radial-gradient(ellipse_at_top,oklch(30%_0.08_150/.45),transparent_60%)]"></div>
 {#if Backdrop}<Backdrop />{/if}
 
-<div class="mx-auto flex min-h-dvh max-w-6xl flex-col px-5 sm:px-8">
+<div class="mx-auto flex min-h-dvh max-w-6xl flex-col overflow-x-clip px-5 sm:px-8">
 	<header class="flex items-center justify-between py-6">
 		<a href="/" class="flex items-center gap-2 font-mono text-sm font-semibold tracking-tight">
 			<span class="grid size-6 place-items-center rounded-md bg-primary text-primary-content">

@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { END_LABELS } from '@snakebench/core';
-	import { reveal } from '#lib/reveal.js';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -18,17 +17,17 @@
 	<meta name="description" content="Free LLMs ranked on SnakeBench, benchmarked automatically every day on one private seed." />
 </svelte:head>
 
-<div class="flex flex-col gap-12 pt-4 pb-10" {@attach reveal()}>
+<div class="flex flex-col gap-12 pt-4 pb-10">
 	<header class="flex flex-col gap-4">
-		<h1 data-reveal class="text-5xl font-semibold tracking-tighter sm:text-6xl">Leaderboard</h1>
-		<p data-reveal class="max-w-xl text-lg text-pretty text-base-content/70">
+		<h1 data-reveal style="--i: 0" class="text-5xl font-semibold tracking-tighter sm:text-6xl">Leaderboard</h1>
+		<p data-reveal style="--i: 1" class="max-w-xl text-lg text-pretty text-base-content/70">
 			Every model here was run by us, on the same board, with the same prompt. No self-reported
 			scores.
 		</p>
 	</header>
 
 	<section aria-labelledby="free" class="flex flex-col gap-6">
-		<div data-reveal class="flex flex-wrap items-end justify-between gap-4">
+		<div data-reveal style="--i: 2" class="flex flex-wrap items-end justify-between gap-4">
 			<div>
 				<h2 id="free" class="text-2xl font-semibold tracking-tight">Free LLM Leaderboard</h2>
 				<p class="mt-1 text-sm text-base-content/50">
@@ -38,7 +37,7 @@
 			{#if updated}<p class="font-mono text-xs text-base-content/40">updated {date(updated)}</p>{/if}
 		</div>
 
-		<ul data-reveal class="grid gap-3 text-sm sm:grid-cols-3">
+		<ul data-reveal style="--i: 3" class="grid gap-3 text-sm sm:grid-cols-3">
 			<li class="rounded-box bg-base-200/70 p-4">
 				<span class="badge badge-sm badge-primary font-mono">Fixed settings</span>
 				<p class="mt-2 text-base-content/70">
@@ -63,7 +62,7 @@
 		</ul>
 
 		{#if entries.length}
-			<div data-reveal class="overflow-x-auto">
+			<div data-reveal style="--i: 4" class="overflow-x-auto">
 				<table class="table">
 					<thead>
 						<tr class="text-base-content/50">
@@ -112,7 +111,7 @@
 				</table>
 			</div>
 		{:else}
-			<div data-reveal class="rounded-box border border-dashed border-base-300 py-16 text-center">
+			<div data-reveal style="--i: 4" class="rounded-box border border-dashed border-base-300 py-16 text-center">
 				<p class="font-mono text-sm text-primary">0 / ∞</p>
 				<p class="mt-2 text-base-content/60">The first daily run hasn't landed yet. Check back tomorrow.</p>
 			</div>

@@ -30,11 +30,13 @@ jobs:
           sudo apt-get update -qq && sudo apt-get install -y -qq bubblewrap
           sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0 || true
 
-      # Stock OpenCode, pinned so every result on the board comes from the same harness.
-      - name: Install OpenCode
+      # Vanilla Pi, pinned so every result on the board comes from the same harness.
+      - name: Install Pi
         run: |
-          curl -fsSL https://opencode.ai/install | bash -s -- --version 1.18.35 --no-modify-path
-          echo "OPENCODE_BIN=$HOME/.opencode/bin/opencode" >> "$GITHUB_ENV"
+          curl -fsSL -o /tmp/pi.tar.gz https://github.com/earendil-works/pi/releases/download/v1.1.0/pi-linux-x64.tar.gz
+          echo "3faa94666cd3849d37af320ff749407d0271b07a9b94f420c87e30866e10e289  /tmp/pi.tar.gz" | sha256sum -c
+          tar xzf /tmp/pi.tar.gz -C "$HOME"
+          echo "PI_DIR=$HOME/pi" >> "$GITHUB_ENV"
 
       - run: bun install --frozen-lockfile
 

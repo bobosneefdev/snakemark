@@ -1,7 +1,7 @@
 import net from 'node:net';
 import { Duration, Effect, FileSystem, Option, Path, Redacted, Stream } from 'effect';
 import { ChildProcess } from 'effect/process';
-import type { Candidate } from './opencode';
+import type { Candidate } from './catalog';
 
 /** Long enough for a reasoning model to grind through a 100-food plan, short enough to finish the daily job. */
 export const RUN_TIMEOUT = Duration.minutes(15);
@@ -31,28 +31,27 @@ const egress = (socket: string, host: string) =>
 	);
 
 export interface Outcome {
-	/** stdout of `opencode run --format json`, or none when the run hit RUN_TIMEOUT */
+	/** stdout of `pi --mode json`, or none when the run hit RUN_TIMEOUT */
 	stdout: Option.Option<string>;
 	seconds: number;
 }
 
 /**
- * Runs stock OpenCode once inside bubblewrap: every namespace unshared (no network at all),
+ * Runs vanilla Pi once inside bubblewrap: every namespace unshared (no network at all),
  * read-only /usr, a throwaway home, and an env holding only this provider's key.
  */
 export const runSandboxed = Effect.fn('Sandbox.run')(function* (
 	candidate: Candidate,
 	key: Redacted.Redacted,
 	prompt: string,
-	catalog: string,
-	opencode: string
+	/** directory of the Pi release (the binary plus the assets it loads from beside it) */
+	pi: string
 ) {
 	const fs = yield* FileSystem.FileSystem;
 	const path = yield* Path.Path;
 	const dir = yield* fs.makeTempDirectoryScoped({ prefix: 'snakemark-' });
 	yield* fs.makeDirectory(path.join(dir, 'home'));
 	yield* fs.makeDirectory(path.join(dir, 'work'));
-	yield* fs.writeFileString(path.join(dir, 'models.json'), catalog);
 	yield* egress(path.join(dir, 'egress.sock'), candidate.host);
 
 	const bridge = path.join(import.meta.dir, 'bridge.ts');
@@ -64,12 +63,13 @@ export const runSandboxed = Effect.fn('Sandbox.run')(function* (
 		'--ro-bind-try', '/etc/ssl', '/etc/ssl', '--ro-bind-try', '/etc/ca-certificates', '/etc/ca-certificates',
 		'--proc', '/proc', '--dev', '/dev', '--tmpfs', '/tmp',
 		'--bind', dir, '/sandbox',
-		'--ro-bind', process.execPath, '/opt/bun', '--ro-bind', bridge, '/opt/bridge.ts', '--ro-bind', opencode, '/opt/opencode',
+		'--ro-bind', process.execPath, '/opt/bun', '--ro-bind', bridge, '/opt/bridge.ts', '--ro-bind', pi, '/opt/pi',
 		'--chdir', '/sandbox/work',
 		'/opt/bun', '/opt/bridge.ts',
-		'/opt/opencode', 'run', '--format', 'json',
-		'--model', `${candidate.provider}/${candidate.model}`,
-		prompt
+		// The prompt forbids tools and code execution, so the model gets none rather than being trusted not to use them.
+		'/opt/pi/pi', '--mode', 'json', '--no-session', '--no-tools',
+		'--provider', candidate.provider, '--model', candidate.model,
+		'--', prompt
 	];
 	const proxy = 'http://127.0.0.1:3128';
 	const command = ChildProcess.make('bwrap', args, {
@@ -80,14 +80,9 @@ export const runSandboxed = Effect.fn('Sandbox.run')(function* (
 			HOME: '/sandbox/home',
 			HTTPS_PROXY: proxy,
 			HTTP_PROXY: proxy,
-			// OpenCode's CLI talks to its own local server; that must not go through the proxy
-			NO_PROXY: '127.0.0.1,localhost',
 			[candidate.keyEnv]: Redacted.value(key),
-			OPENCODE_MODELS_PATH: '/sandbox/models.json',
-			OPENCODE_DISABLE_MODELS_FETCH: '1',
-			OPENCODE_DISABLE_AUTOUPDATE: '1',
-			// The prompt forbids tools and code execution, so every tool is denied rather than trusted to the model.
-			OPENCODE_CONFIG_CONTENT: JSON.stringify({ share: 'disabled', enabled_providers: [candidate.provider], permission: 'deny' })
+			// stick to the bundled model catalog; the sandbox can't reach pi.dev anyway
+			PI_OFFLINE: '1'
 		}
 	});
 

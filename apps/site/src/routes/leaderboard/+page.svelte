@@ -56,7 +56,7 @@
 			<li class="rounded-box bg-base-200/70 p-4">
 				<span class="badge badge-sm badge-outline font-mono">Sandboxed</span>
 				<p class="mt-2 text-base-content/70">
-					Stock OpenCode with every tool denied and no internet. It can reach its own model API and
+					Vanilla Pi with every tool disabled and no internet. It can reach its own model API and
 					nothing else. 15 minute limit.
 				</p>
 			</li>

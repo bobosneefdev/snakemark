@@ -155,7 +155,7 @@
 			<ul>
 				<li>The same fixed settings as every game, on one seed we keep private so nobody can tune against the board.</li>
 				<li>The prompt is exactly what the benchmark page copies. The model's final message is scored as-is.</li>
-				<li>The harness is stock OpenCode with every tool denied, in a sandbox with no internet. Only the model's own API is reachable.</li>
+				<li>The harness is vanilla Pi with every tool disabled, in a sandbox with no internet. Only the model's own API is reachable.</li>
 				<li>Runs over 15 minutes score as invalid. Provider errors are not recorded and are retried the next day.</li>
 			</ul>
 		</section>

@@ -4,16 +4,17 @@
  * retried on the next run; only real answers and timeouts are recorded.
  */
 import { BunRuntime, BunServices } from '@effect/platform-bun';
-import { Config, Duration, Effect, FileSystem, Option, Redacted, Result, Schema, Semaphore } from 'effect';
-import { FetchHttpClient, HttpClient } from 'effect/http';
+import { Config, Duration, Effect, FileSystem, Option, Path, Redacted, Result, Schema, Semaphore, Stream } from 'effect';
 import { ChildProcess, ChildProcessSpawner } from 'effect/process';
 import { buildPrompt, decodeSeed, generate, grade, parse, simulate, solve, SETTINGS } from '@snakemark/core';
 import { decodeResults, entryKey, Results, type Entry, type Provider } from '@snakemark/core/results';
-import { Catalog, candidates, readEvents, type Candidate } from './opencode';
+import { Catalog, candidates, KEY_ENV, readEvents, type Candidate } from './catalog';
 import { runSandboxed } from './sandbox';
 
 const RESULTS = Bun.resolveSync('@snakemark/core/results.json', import.meta.dir);
-const CATALOG_URL = 'https://models.opencode.ai/api.json';
+const ModelsResponse = Schema.Struct({
+	data: Schema.Struct({ models: Catalog })
+});
 
 const main = Effect.gen(function* () {
 	// Private on purpose: the site discloses the settings but never the seed, so nobody can regenerate the
@@ -32,30 +33,48 @@ const main = Effect.gen(function* () {
 	const fs = yield* FileSystem.FileSystem;
 	const spawner = yield* ChildProcessSpawner.ChildProcessSpawner;
 
-	const opencode = yield* Config.String('OPENCODE_BIN').pipe(Config.withDefault(Bun.which('opencode') ?? 'opencode'));
-	const harness = `OpenCode ${(yield* spawner.string(ChildProcess.make(opencode, ['--version']))).trim()}`;
+	// Directory of the extracted Pi release; the binary loads its assets from beside it.
+	const piDir = yield* Config.String('PI_DIR');
+	const pi = (yield* Path.Path).join(piDir, 'pi');
+	const harness = `Pi ${(yield* spawner.string(ChildProcess.make(pi, ['--version']))).trim()}`;
 	const keys: Record<Provider, Option.Option<Redacted.Redacted>> = {
-		opencode: yield* Config.option(Config.Redacted('OPENCODE_API_KEY')),
-		nvidia: yield* Config.option(Config.Redacted('NVIDIA_API_KEY')),
-		openrouter: yield* Config.option(Config.Redacted('OPENROUTER_API_KEY'))
+		opencode: yield* Config.option(Config.Redacted(KEY_ENV.opencode)),
+		nvidia: yield* Config.option(Config.Redacted(KEY_ENV.nvidia)),
+		openrouter: yield* Config.option(Config.Redacted(KEY_ENV.openrouter))
 	};
 
-	const http = HttpClient.filterStatusOk(yield* HttpClient.HttpClient);
-	const catalogText = yield* http.get(CATALOG_URL).pipe(Effect.flatMap((r) => r.text));
-	const catalog = yield* Schema.decodeUnknownEffect(Schema.fromJsonString(Catalog))(catalogText);
+	// Pi only lists models whose provider has a key, so ask its bundled catalog with placeholder keys.
+	const listing = yield* spawner.string(
+		ChildProcess.make(pi, ['--mode', 'rpc', '--no-session', '--offline'], {
+			extendEnv: false,
+			env: {
+				PATH: '/usr/bin:/bin',
+				HOME: yield* fs.makeTempDirectoryScoped(),
+				...Object.fromEntries(Object.values(KEY_ENV).map((k) => [k, 'x']))
+			},
+			stdin: Stream.make(new TextEncoder().encode('{"type":"get_available_models"}\n'))
+		})
+	);
+	const catalog = yield* Schema.decodeUnknownEffect(Schema.fromJsonString(ModelsResponse))(listing.trim().split('\n').at(-1) ?? '');
 
 	const results: Results = decodeResults(JSON.parse(yield* fs.readFileString(RESULTS)));
 	const entries = new Map(results.entries.map((e) => [entryKey(e), e]));
-	const pending = candidates(catalog).filter((c) => !entries.has(entryKey(c)) && Option.isSome(keys[c.provider]));
+	const pending = candidates(catalog.data.models).filter((c) => !entries.has(entryKey(c)) && Option.isSome(keys[c.provider]));
 	yield* Effect.log(`${harness}: ${pending.length} model(s) to benchmark, ${entries.size} already scored`);
 
 	// One writer at a time so a slow write can't land after a newer one.
 	const writer = yield* Semaphore.make(1);
-	const save = Semaphore.withPermits(writer, 1)(
+	const save = Semaphore.withPermits(
+		writer,
+		1
+	)(
 		fs.writeFileString(
 			RESULTS,
 			JSON.stringify(
-				{ reference: { food: reference.food, steps: reference.steps }, entries: [...entries.values()] } satisfies Results,
+				{
+					reference: { food: reference.food, steps: reference.steps },
+					entries: [...entries.values()]
+				} satisfies Results,
 				null,
 				'\t'
 			) + '\n'
@@ -70,7 +89,7 @@ const main = Effect.gen(function* () {
 		Effect.gen(function* () {
 			if (Date.now() > deadline) return;
 			const key = Option.getOrThrow(keys[c.provider]);
-			const outcome = yield* runSandboxed(c, key, prompt, catalogText, opencode);
+			const outcome = yield* runSandboxed(c, key, prompt, piDir);
 			const { text, error } = Option.match(outcome.stdout, {
 				onNone: () => ({ text: '', error: undefined }),
 				onSome: readEvents
@@ -109,4 +128,4 @@ const main = Effect.gen(function* () {
 	yield* save;
 });
 
-main.pipe(Effect.provide([BunServices.layer, FetchHttpClient.layer]), BunRuntime.runMain);
+main.pipe(Effect.scoped, Effect.provide(BunServices.layer), BunRuntime.runMain);

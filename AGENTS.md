@@ -123,7 +123,7 @@ On the benchmark page this should be the flow:
 ## Leaderboard
 - Only results we collect ourselves go on the leaderboard page, under "Free LLM Leaderboard".
 - A daily job benchmarks every free text-to-text LLM from build.nvidia.com, OpenCode Zen and OpenRouter that hasn't been benchmarked yet.
-- Each run uses the stock OpenCode harness with every tool denied, sandboxed with no internet (only the model's own API host is reachable).
+- Each run uses the vanilla Pi harness (pi.dev) with every tool disabled, sandboxed with no internet (only the model's own API host is reachable).
 - Always the fixed game settings. The page discloses them; the seed stays private in the `LEADERBOARD_SEED` repo secret. Never commit, log or hard-code it.
 
 ## Repo layout

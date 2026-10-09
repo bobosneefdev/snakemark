@@ -7,7 +7,7 @@ export type Provider = typeof Provider.Type;
 
 export const Entry = Schema.Struct({
 	provider: Provider,
-	/** provider-local model id, as OpenCode names it after `provider/` */
+	/** provider-local model id, as Pi names it after `provider/` */
 	model: Schema.String,
 	name: Schema.String,
 	food: Schema.Int,

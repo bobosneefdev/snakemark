@@ -1,6 +1,6 @@
 /**
  * Sandbox entrypoint. The sandbox has no network, so this forwards 127.0.0.1:3128 to the host's
- * egress proxy socket, then runs the command it was given (OpenCode) and exits with its code.
+ * egress proxy socket, then runs the command it was given (Pi) and exits with its code.
  */
 import net from 'node:net';
 

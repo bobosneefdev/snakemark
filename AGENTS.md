@@ -109,7 +109,7 @@ Core challenge for the LLM: Plan the entire game before making the first move.
 - Cloudflare pages, hosted on snakebench.bobosneef.dev
 
 ## Goal
-Build an absolutely sick website that will be the home of the benchmark. bobosneef.dev will eventually be my developer work portfolio, so this site can't disappoint, but should also feel refreshingly minimal. There should be 3 pages: home, benchmark, and docs.
+Build an absolutely sick website that will be the home of the benchmark. bobosneef.dev will eventually be my developer work portfolio, so this site can't disappoint, but should also feel refreshingly minimal. There should be 4 pages: home, benchmark, leaderboard, and docs.
 
 On the benchmark page this should be the flow:
 - Enter the variables
@@ -119,3 +119,23 @@ On the benchmark page this should be the flow:
 - User pastes the response back into the site
 - The site starts playing the simulation of the gameplay for you, you can pick 1x, 2x, 5x, or just skip.
 - The final score is revealed in an epic manner to the user
+
+## Leaderboard
+- Only results we collect ourselves go on the leaderboard page, under "Free LLM Leaderboard".
+- A daily job benchmarks every free text-to-text LLM from build.nvidia.com, OpenCode Zen and OpenRouter that hasn't been benchmarked yet.
+- Each run uses the stock OpenCode harness with every tool denied, sandboxed with no internet (only the model's own API host is reachable).
+- Always the fixed game settings. The page discloses them; the seed stays private in the `LEADERBOARD_SEED` repo secret. Never commit, log or hard-code it.
+
+## Repo layout
+Turborepo + Bun workspaces. Shared game logic lives in `packages/core` and is used by both `apps/site` and `apps/worker`. Never duplicate it.
+
+<!-- BEGIN:turborepo-agent-rules -->
+
+# This is NOT the Turborepo you know
+
+Turborepo configuration, task behavior, and CLI commands can vary between installed versions and may differ from your training data. Resolve the `turbo` package from this file's directory or relevant workspace; in monorepos, it may not be visible from the repository root. For example, run `node -p "require.resolve('turbo/package.json')"` from a workspace that depends on `turbo`.
+
+Read `docs/README.md` inside that installed package first, then read the relevant pages from its `docs/` directory before changing Turborepo configuration or commands. Heed deprecation notices. These bundled docs match the installed package version and are available without network access.
+
+This block is written and re-added by `turbo` before repository-scoped commands when an AI agent is detected. In the Turborepo source repository, its template is defined in `crates/turborepo-cli/src/cli/agent_guidance.rs`. Removing the managed block while updates are enabled means a later qualifying invocation will add it again. Set `"agentGuidance": false` in the root `turbo.json` or `turbo.jsonc` to opt out; this does not remove an existing block. Keep the block committed with your work to avoid an uncommitted change on the next agent invocation.
+<!-- END:turborepo-agent-rules -->

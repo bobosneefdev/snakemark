@@ -1,0 +1,11 @@
+{
+	"$schema": "https://turborepo.com/schema.json",
+	"tasks": {
+		"transit": { "dependsOn": ["^transit"] },
+		"build": { "dependsOn": ["transit"], "outputs": ["build/**", ".svelte-kit/**"] },
+		"check": { "dependsOn": ["transit"] },
+		"test": { "dependsOn": ["transit"] },
+		"dev": { "cache": false, "persistent": true },
+		"deploy": { "dependsOn": ["build"], "cache": false, "passThroughEnv": ["CLOUDFLARE_API_TOKEN", "CLOUDFLARE_ACCOUNT_ID"] }
+	}
+}

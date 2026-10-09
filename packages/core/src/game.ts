@@ -4,7 +4,8 @@ export type Point = readonly [x: number, y: number];
 /** 0 = up, 1 = right, 2 = down, 3 = left */
 export type Dir = 0 | 1 | 2 | 3;
 export type Command = number | 'L' | 'R';
-export type EndReason = 'cleared' | 'wall' | 'obstacle' | 'self' | 'commands' | 'limit' | 'invalid';
+export const EndReason = Schema.Literals(['cleared', 'wall', 'obstacle', 'self', 'commands', 'limit', 'invalid']);
+export type EndReason = typeof EndReason.Type;
 
 const DX = [0, 1, 0, -1] as const;
 const DY = [-1, 0, 1, 0] as const;
@@ -417,7 +418,10 @@ export function encode(dirs: Dir[], start: Dir): string {
 	return run ? out + run : out;
 }
 
-export function grade(run: Run, referenceFood: number) {
+export const Grade = Schema.Literals(['S', 'A', 'B', 'C', 'D', 'F']);
+export type Grade = typeof Grade.Type;
+
+export function grade(run: Run, referenceFood: number): Grade {
 	if (run.end === 'invalid') return 'F';
 	if (run.end === 'cleared') return 'S';
 	const r = run.food / Math.max(1, referenceFood);

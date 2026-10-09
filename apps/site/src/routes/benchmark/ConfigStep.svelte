@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Board from '#lib/Board.svelte';
-	import { randomSeed, type Game } from '#lib/game.js';
+	import { randomSeed, type Game } from '@snakebench/core';
 
 	interface Props {
 		seed: number;

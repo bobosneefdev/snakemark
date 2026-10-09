@@ -2,7 +2,7 @@
 	import { animate, stagger } from 'motion';
 	import type { Component } from 'svelte';
 	import { loadShader } from '#lib/gpu.js';
-	import { END_LABELS, grade, type Run } from '#lib/game.js';
+	import { END_LABELS, grade, type Run } from '@snakebench/core';
 
 	interface Props {
 		run: Run;

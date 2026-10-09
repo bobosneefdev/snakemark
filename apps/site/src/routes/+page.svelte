@@ -2,7 +2,7 @@
 	import Board from '#lib/Board.svelte';
 	import { Playback } from '#lib/playback.svelte.js';
 	import { reveal } from '#lib/reveal.js';
-	import { generate, parse, simulate, solve } from '#lib/game.js';
+	import { generate, parse, simulate, solve } from '@snakebench/core';
 
 	// A fixed demo game so the hero looks the same for everyone.
 	const game = generate({ gridSize: 14, obstacleCount: 14, foodCount: 20, seed: 2026 });

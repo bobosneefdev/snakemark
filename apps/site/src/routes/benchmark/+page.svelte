@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { Result } from 'effect';
-	import { decodeSeed, generate, parse, SETTINGS, simulate, solve, type Run } from '#lib/game.js';
+	import { decodeSeed, generate, parse, SETTINGS, simulate, solve, type Run } from '@snakebench/core';
 	import ConfigStep from './ConfigStep.svelte';
 	import PromptStep from './PromptStep.svelte';
 	import PlayStep from './PlayStep.svelte';

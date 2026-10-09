@@ -1,0 +1,11 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "snakebench",
+	"compatibility_date": "2026-10-08",
+	// Static assets only: every page is prerendered, so no Worker script runs.
+	"assets": {
+		"directory": "build",
+		"not_found_handling": "404-page"
+	},
+	"routes": [{ "pattern": "snakebench.bobosneef.dev", "custom_domain": true }]
+}

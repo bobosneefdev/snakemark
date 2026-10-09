@@ -1,0 +1,70 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/geist';
+@import '@fontsource-variable/geist-mono';
+@plugin "daisyui" {
+	themes: false;
+	logs: false;
+}
+@plugin "daisyui/theme" {
+	name: 'snake';
+	default: true;
+	prefersdark: true;
+	color-scheme: dark;
+	--color-base-100: oklch(15% 0.008 160);
+	--color-base-200: oklch(19% 0.01 160);
+	--color-base-300: oklch(25% 0.012 160);
+	--color-base-content: oklch(94% 0.01 160);
+	--color-primary: oklch(87% 0.21 145);
+	--color-primary-content: oklch(18% 0.05 145);
+	--color-secondary: oklch(78% 0.15 75);
+	--color-secondary-content: oklch(20% 0.04 75);
+	--color-accent: oklch(70% 0.2 330);
+	--color-accent-content: oklch(15% 0.04 330);
+	--color-neutral: oklch(28% 0.012 160);
+	--color-neutral-content: oklch(90% 0.01 160);
+	--color-info: oklch(75% 0.12 230);
+	--color-info-content: oklch(18% 0.04 230);
+	--color-success: oklch(80% 0.2 150);
+	--color-success-content: oklch(18% 0.05 150);
+	--color-warning: oklch(82% 0.16 80);
+	--color-warning-content: oklch(20% 0.05 80);
+	--color-error: oklch(68% 0.22 25);
+	--color-error-content: oklch(98% 0.01 25);
+	--radius-selector: 1rem;
+	--radius-field: 0.5rem;
+	--radius-box: 1rem;
+	--size-selector: 0.25rem;
+	--size-field: 0.25rem;
+	--border: 1px;
+	--depth: 0;
+	--noise: 0;
+}
+
+@theme {
+	--font-sans: 'Geist Variable', ui-sans-serif, system-ui, sans-serif;
+	--font-mono: 'Geist Mono Variable', ui-monospace, monospace;
+}
+
+@keyframes fade {
+	from {
+		opacity: 0;
+	}
+}
+
+html {
+	scrollbar-gutter: stable;
+}
+
+::selection {
+	background: var(--color-primary);
+	color: var(--color-primary-content);
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		transition-duration: 0.01ms !important;
+	}
+}

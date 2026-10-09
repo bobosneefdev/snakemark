@@ -55,8 +55,8 @@
 	});
 
 	function share() {
-		const { gridSize, obstacleCount, foodCount, seed } = run.game.config;
-		const text = `SnakeBench ${gridSize}×${gridSize} · ${obstacleCount} obstacles · ${foodCount} food · seed ${seed}\nGrade ${letter}: ${run.food}/${total} food in ${run.steps} moves (${vsRef}% of reference)\n${END_LABELS[run.end]}`;
+		const { seed } = run.game.config;
+		const text = `SnakeBench seed ${seed}\nGrade ${letter}: ${run.food}/${total} food in ${run.steps} moves (${vsRef}% of reference)\n${END_LABELS[run.end]}`;
 		navigator.clipboard.writeText(text).then(() => {
 			copied = true;
 			setTimeout(() => (copied = false), 2000);

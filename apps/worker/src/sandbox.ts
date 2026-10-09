@@ -67,7 +67,7 @@ export const runSandboxed = Effect.fn('Sandbox.run')(function* (
 		'--ro-bind', process.execPath, '/opt/bun', '--ro-bind', bridge, '/opt/bridge.ts', '--ro-bind', opencode, '/opt/opencode',
 		'--chdir', '/sandbox/work',
 		'/opt/bun', '/opt/bridge.ts',
-		'/opt/opencode', 'run', '--standalone', '--auto', '--format', 'json',
+		'/opt/opencode', 'run', '--standalone', '--format', 'json',
 		'--model', `${candidate.provider}/${candidate.model}`,
 		prompt
 	];
@@ -86,7 +86,8 @@ export const runSandboxed = Effect.fn('Sandbox.run')(function* (
 			OPENCODE_MODELS_PATH: '/sandbox/models.json',
 			OPENCODE_DISABLE_MODELS_FETCH: '1',
 			OPENCODE_DISABLE_AUTOUPDATE: '1',
-			OPENCODE_CONFIG_CONTENT: JSON.stringify({ share: 'disabled', enabled_providers: [candidate.provider] })
+			// The prompt forbids tools and code execution, so every tool is denied rather than trusted to the model.
+			OPENCODE_CONFIG_CONTENT: JSON.stringify({ share: 'disabled', enabled_providers: [candidate.provider], permission: 'deny' })
 		}
 	});
 

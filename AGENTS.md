@@ -123,8 +123,8 @@ On the benchmark page this should be the flow:
 ## Leaderboard
 - Only results we collect ourselves go on the leaderboard page, under "Free LLM Leaderboard".
 - A daily job benchmarks every free text-to-text LLM from build.nvidia.com, OpenCode Zen and OpenRouter that hasn't been benchmarked yet.
-- Each run uses the stock OpenCode harness, sandboxed with no internet (only the model's own API host is reachable).
-- Always the Brutal preset. The page discloses the preset; the seed stays private, hard-coded in `apps/worker/src/seed.ts`. The site must never import from `apps/worker`.
+- Each run uses the stock OpenCode harness with every tool denied, sandboxed with no internet (only the model's own API host is reachable).
+- Always the fixed game settings. The page discloses them; the seed stays private, hard-coded in `apps/worker/src/seed.ts`. The site must never import from `apps/worker`.
 
 ## Repo layout
 Turborepo + Bun workspaces. Shared game logic lives in `packages/core` and is used by both `apps/site` and `apps/worker`. Never duplicate it.

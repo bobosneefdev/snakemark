@@ -1,4 +1,4 @@
-import { TIERS } from '@snakebench/core';
+import { SETTINGS } from '@snakebench/core';
 import { decodeResults, rank } from '@snakebench/core/results';
 import raw from '@snakebench/core/results.json';
 
@@ -7,7 +7,7 @@ export const load = () => {
 	const { reference, entries } = decodeResults(raw);
 	return {
 		reference,
-		tier: TIERS.brutal,
+		settings: SETTINGS,
 		entries: rank(entries).map(({ response: _, ...e }) => e)
 	};
 };

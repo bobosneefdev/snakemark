@@ -11,32 +11,18 @@ const DX = [0, 1, 0, -1] as const;
 const DY = [-1, 0, 1, 0] as const;
 const DIR_NAMES = ['UP (toward y−1)', 'RIGHT (toward x+1)', 'DOWN (toward y+1)', 'LEFT (toward x−1)'];
 
-export const maxObstacles = (gridSize: number) => Math.floor(gridSize * gridSize * 0.2);
+/** Fixed for every game so results from the same seed are always comparable. Only the seed varies. */
+export const SETTINGS = { gridSize: 32, obstacleCount: 256, foodCount: 512 } as const;
 
-const int = (minimum: number, maximum: number) => Schema.Int.check(Schema.isBetween({ minimum, maximum }));
+export interface Config {
+	gridSize: number;
+	obstacleCount: number;
+	foodCount: number;
+	seed: number;
+}
 
-export const Config = Schema.Struct({
-	gridSize: int(6, 32),
-	obstacleCount: int(0, maxObstacles(32)),
-	foodCount: int(1, 100),
-	seed: int(0, 2 ** 32 - 1)
-}).check(
-	Schema.makeFilter(
-		(c) =>
-			c.obstacleCount <= maxObstacles(c.gridSize) ||
-			`At most ${maxObstacles(c.gridSize)} obstacles fit on a ${c.gridSize}×${c.gridSize} board`
-	)
-);
-export interface Config extends Schema.Schema.Type<typeof Config> {}
-export const decodeConfig = Schema.decodeUnknownResult(Config);
-
-export const TIERS = {
-	easy: { gridSize: 18, obstacleCount: 36, foodCount: 35 },
-	medium: { gridSize: 24, obstacleCount: 90, foodCount: 60 },
-	hard: { gridSize: 28, obstacleCount: 140, foodCount: 80 },
-	brutal: { gridSize: 32, obstacleCount: maxObstacles(32), foodCount: 100 }
-} as const;
-export type Tier = keyof typeof TIERS;
+export const Seed = Schema.Int.check(Schema.isBetween({ minimum: 0, maximum: 2 ** 32 - 1 }));
+export const decodeSeed = Schema.decodeUnknownResult(Seed);
 
 export interface Game {
 	config: Config;
@@ -459,6 +445,7 @@ export function buildPrompt(game: Game): string {
 	const n = size - 1;
 	return `You are playing SnakeBench, a one-shot Snake planning benchmark.
 Plan the ENTIRE game before your first move. You will get no feedback and no chance to correct anything.
+This is a test of YOUR OWN reasoning. You must solve it without tools: see "No tools" below.
 
 ## Board
 - Grid: ${size}×${size}. Cells are (x,y). x grows to the right (0…${n}), y grows downward (0…${n}). (0,0) is the top-left cell.
@@ -483,6 +470,12 @@ ${game.food.map((p, i) => `${i + 1}. ${fmt(p)}`).join('\n')}
 - A positive integer N: move forward N cells.
 - L: turn 90° left. R: turn 90° right. Turns are relative to the current facing and do not move the snake. Facing UP, L faces LEFT and R faces RIGHT.
 - Example: 3R2L5 means forward 3, turn right, forward 2, turn left, forward 5.
+
+## No tools
+- Do NOT write, run or execute code of any kind: no scripts, no solvers, no simulators, no code interpreter, no sandbox.
+- Do NOT use any tool, plugin, search, external program or other model to plan, check, simulate or refine your answer.
+- Work everything out by reasoning alone. You may think step by step, but only in your own reasoning, never by running anything.
+- An answer produced or checked with any tool is disqualified, even if it scores well.
 
 ## Goal
 Eat as many foods as possible, in order. Fewer moves breaks ties.

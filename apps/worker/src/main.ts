@@ -1,5 +1,5 @@
 /**
- * Daily leaderboard run: benchmark every free model we haven't scored yet on the Brutal preset,
+ * Daily leaderboard run: benchmark every free model we haven't scored yet on the fixed settings,
  * then rewrite packages/core/results.json. Models that error (rate limit, outage) are skipped and
  * retried on the next run; only real answers and timeouts are recorded.
  */
@@ -7,7 +7,7 @@ import { BunRuntime, BunServices } from '@effect/platform-bun';
 import { Config, Duration, Effect, FileSystem, Option, Redacted, Schema, Semaphore } from 'effect';
 import { FetchHttpClient, HttpClient } from 'effect/http';
 import { ChildProcess, ChildProcessSpawner } from 'effect/process';
-import { buildPrompt, generate, grade, parse, simulate, solve, TIERS } from '@snakebench/core';
+import { buildPrompt, generate, grade, parse, simulate, solve, SETTINGS } from '@snakebench/core';
 import { decodeResults, entryKey, Results, type Entry, type Provider } from '@snakebench/core/results';
 import { Catalog, candidates, readEvents, type Candidate } from './opencode';
 import { runSandboxed } from './sandbox';
@@ -16,7 +16,7 @@ import { LEADERBOARD_SEED } from './seed';
 const RESULTS = Bun.resolveSync('@snakebench/core/results.json', import.meta.dir);
 const CATALOG_URL = 'https://models.opencode.ai/api.json';
 
-const game = generate({ ...TIERS.brutal, seed: LEADERBOARD_SEED });
+const game = generate({ ...SETTINGS, seed: LEADERBOARD_SEED });
 const prompt = buildPrompt(game);
 const play = (response: string) => {
 	const parsed = parse(response);

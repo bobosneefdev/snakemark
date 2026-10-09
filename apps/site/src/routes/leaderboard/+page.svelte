@@ -4,7 +4,7 @@
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
-	const { entries, reference, tier } = $derived(data);
+	const { entries, reference, settings } = $derived(data);
 
 	const PROVIDERS = { opencode: 'OpenCode Zen', nvidia: 'NVIDIA', openrouter: 'OpenRouter' } as const;
 	const updated = $derived(entries.map((e) => e.ranAt).sort().at(-1));
@@ -15,7 +15,7 @@
 
 <svelte:head>
 	<title>Leaderboard · SnakeBench</title>
-	<meta name="description" content="Free LLMs ranked on SnakeBench's Brutal preset, benchmarked automatically every day." />
+	<meta name="description" content="Free LLMs ranked on SnakeBench, benchmarked automatically every day on one private seed." />
 </svelte:head>
 
 <div class="flex flex-col gap-12 pt-4 pb-10" {@attach reveal()}>
@@ -40,10 +40,10 @@
 
 		<ul data-reveal class="grid gap-3 text-sm sm:grid-cols-3">
 			<li class="rounded-box bg-base-200/70 p-4">
-				<span class="badge badge-sm badge-primary font-mono">Brutal preset</span>
+				<span class="badge badge-sm badge-primary font-mono">Fixed settings</span>
 				<p class="mt-2 text-base-content/70">
-					{tier.gridSize}×{tier.gridSize} grid, {tier.obstacleCount} obstacles, {tier.foodCount} food. One
-					fixed seed, kept private so nobody can tune against the board.
+					{settings.gridSize}×{settings.gridSize} grid, {settings.obstacleCount} obstacles, {settings.foodCount}
+					food, like every game. One fixed seed, kept private so nobody can tune against the board.
 				</p>
 			</li>
 			<li class="rounded-box bg-base-200/70 p-4">
@@ -56,8 +56,8 @@
 			<li class="rounded-box bg-base-200/70 p-4">
 				<span class="badge badge-sm badge-outline font-mono">Sandboxed</span>
 				<p class="mt-2 text-base-content/70">
-					Runs in stock OpenCode with its usual tools and no internet. It can reach its own model
-					API and nothing else. 15 minute limit.
+					Stock OpenCode with every tool denied and no internet. It can reach its own model API and
+					nothing else. 15 minute limit.
 				</p>
 			</li>
 		</ul>
@@ -87,7 +87,7 @@
 								</td>
 								<td>
 									<div class="flex items-center gap-3">
-										<progress class="progress w-24 progress-primary" value={e.food} max={tier.foodCount}></progress>
+										<progress class="progress w-24 progress-primary" value={e.food} max={settings.foodCount}></progress>
 										<span class="font-mono tabular-nums">{e.food}</span>
 									</div>
 									<div class="mt-1 text-xs text-base-content/40">

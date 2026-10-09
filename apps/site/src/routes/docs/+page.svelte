@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { TIERS } from '@snakebench/core';
+	import { SETTINGS } from '@snakebench/core';
 
 	const toc = [
 		['overview', 'Overview'],
@@ -8,7 +8,7 @@
 		['commands', 'Command syntax'],
 		['rules', 'Rules and edge cases'],
 		['scoring', 'Scoring'],
-		['tiers', 'Difficulty tiers'],
+		['settings', 'Fixed settings'],
 		['determinism', 'Determinism'],
 		['leaderboard', 'Leaderboard runs']
 	] as const;
@@ -45,7 +45,7 @@
 		<section id="flow">
 			<h2>Benchmark flow</h2>
 			<ol>
-				<li><strong>Configure.</strong> Choose grid size, obstacle count, food count and seed. A live preview shows the exact board.</li>
+				<li><strong>Seed.</strong> Pick a seed. Everything else is fixed. A live preview shows the exact board.</li>
 				<li><strong>Prompt.</strong> Copy the generated prompt into any LLM, then paste its answer back.</li>
 				<li><strong>Simulate.</strong> Watch the plan play out at 1×, 2× or 5×, or skip straight to the end.</li>
 				<li><strong>Score.</strong> See food collected, survival, efficiency and how it stacks up against the reference solver.</li>
@@ -58,7 +58,6 @@
 				<li>Cells are <code>(x,y)</code>. <code>(0,0)</code> is the top-left. <code>x</code> grows right, <code>y</code> grows down.</li>
 				<li>The snake starts with length 3 at the centre column, head at <code>(⌊n/2⌋, ⌊n/2⌋)</code>, body trailing downward, facing up.</li>
 				<li>Obstacles never sit on the snake or the two cells straight ahead of it, and never cut off part of the board.</li>
-				<li>Obstacles are capped at 20% of cells.</li>
 			</ul>
 		</section>
 
@@ -86,6 +85,7 @@
 				<li><strong>Death.</strong> Leaving the grid, entering an obstacle, or entering your own body ends the game immediately. The fatal move does not count.</li>
 				<li><strong>Running out.</strong> The game also ends when commands are exhausted, all food is eaten, or the move limit (<code>food × grid × 4</code>) is reached.</li>
 				<li><strong>Malformed responses</strong> score 0 food and an F. Nothing is guessed or repaired.</li>
+				<li><strong>No tools.</strong> The model must plan by reasoning alone. The prompt forbids writing or running code, solvers, simulators, search or any other tool. Run it with tools and code execution turned off. A tool-assisted answer is not a valid result.</li>
 				<li><strong>Trailing turns</strong> after the last move are allowed and do nothing.</li>
 			</ul>
 		</section>
@@ -113,21 +113,23 @@
 			</div>
 		</section>
 
-		<section id="tiers">
-			<h2>Difficulty tiers</h2>
-			<p>Tiers are presets. Report results per tier, averaged across several seeds.</p>
+		<section id="settings">
+			<h2>Fixed settings</h2>
+			<p>
+				Every game uses the same settings. Only the seed changes, so any two results on the same seed
+				can be compared directly. The settings are deliberately brutal so that even the strongest
+				models have room to improve. Report results averaged across several seeds.
+			</p>
 			<div class="overflow-x-auto">
 				<table class="table table-sm">
-					<thead><tr><th>Tier</th><th>Grid</th><th>Obstacles</th><th>Food</th></tr></thead>
+					<thead><tr><th>Grid</th><th>Obstacles</th><th>Food</th><th>Move limit</th></tr></thead>
 					<tbody>
-						{#each Object.entries(TIERS) as [name, t] (name)}
-							<tr>
-								<td class="capitalize">{name}</td>
-								<td class="font-mono">{t.gridSize}×{t.gridSize}</td>
-								<td class="font-mono">{t.obstacleCount}</td>
-								<td class="font-mono">{t.foodCount}</td>
-							</tr>
-						{/each}
+						<tr>
+							<td class="font-mono">{SETTINGS.gridSize}×{SETTINGS.gridSize}</td>
+							<td class="font-mono">{SETTINGS.obstacleCount}</td>
+							<td class="font-mono">{SETTINGS.foodCount}</td>
+							<td class="font-mono">{SETTINGS.foodCount * SETTINGS.gridSize * 4}</td>
+						</tr>
 					</tbody>
 				</table>
 			</div>
@@ -136,10 +138,9 @@
 		<section id="determinism">
 			<h2>Determinism</h2>
 			<p>
-				Boards and food come from a seeded <code>mulberry32</code> generator, so the same grid size,
-				obstacle count, food count and seed always build the same game in every browser. The
-				simulator has no randomness. To compare models fairly, give each one the same settings and
-				seed, in a fresh conversation, with the prompt unchanged.
+				Boards and food come from a seeded <code>mulberry32</code> generator, so the same seed
+				always builds the same game in every browser. The simulator has no randomness. To compare
+				models fairly, give each one the same seed, in a fresh conversation, with the prompt unchanged.
 			</p>
 		</section>
 
@@ -151,9 +152,9 @@
 				attempt.
 			</p>
 			<ul>
-				<li>Always the <strong>Brutal</strong> preset, with one fixed seed we keep private so nobody can tune against the board.</li>
+				<li>The same fixed settings as every game, on one seed we keep private so nobody can tune against the board.</li>
 				<li>The prompt is exactly what the benchmark page copies. The model's final message is scored as-is.</li>
-				<li>The harness is stock OpenCode in a sandbox with no internet. Only the model's own API is reachable.</li>
+				<li>The harness is stock OpenCode with every tool denied, in a sandbox with no internet. Only the model's own API is reachable.</li>
 				<li>Runs over 15 minutes score as invalid. Provider errors are not recorded and are retried the next day.</li>
 			</ul>
 		</section>

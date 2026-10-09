@@ -1,31 +1,29 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { Result } from 'effect';
-	import { decodeConfig, generate, parse, simulate, solve, type Run } from '@snakebench/core';
+	import { decodeSeed, generate, parse, SETTINGS, simulate, solve, type Run } from '@snakebench/core';
 	import ConfigStep from './ConfigStep.svelte';
 	import PromptStep from './PromptStep.svelte';
 	import PlayStep from './PlayStep.svelte';
 	import ScoreStep from './ScoreStep.svelte';
 
-	const STAGES = ['Configure', 'Prompt', 'Simulate', 'Score'] as const;
+	const STAGES = ['Seed', 'Prompt', 'Simulate', 'Score'] as const;
 	let stage = $state(0);
 
-	let form = $state({ gridSize: 18, obstacleCount: 36, foodCount: 35, seed: 1 });
+	let seed = $state(1);
 	let response = $state('');
 
-	// persist the config across reloads; loaded after mount so prerendered markup hydrates cleanly
-	const CONFIG_KEY = 'snakebench:config';
+	// persist the seed across reloads; loaded after mount so prerendered markup hydrates cleanly
+	const SEED_KEY = 'snakebench:seed';
 	onMount(() => {
-		try {
-			const saved = JSON.parse(localStorage.getItem(CONFIG_KEY) ?? '{}');
-			for (const k of Object.keys(form) as (keyof typeof form)[]) if (typeof saved[k] === 'number') form[k] = saved[k];
-		} catch {}
+		const saved = Number(localStorage.getItem(SEED_KEY) ?? NaN);
+		if (Result.isSuccess(decodeSeed(saved))) seed = saved;
 	});
-	$effect(() => localStorage.setItem(CONFIG_KEY, JSON.stringify(form)));
+	$effect(() => localStorage.setItem(SEED_KEY, String(seed)));
 
-	const decoded = $derived(decodeConfig(form));
-	const game = $derived(Result.isSuccess(decoded) ? generate(decoded.success) : null);
-	const error = $derived(Result.isFailure(decoded) ? String(decoded.failure.message).split('\n')[0] : null);
+	const decoded = $derived(decodeSeed(seed));
+	const game = $derived(Result.isSuccess(decoded) ? generate({ ...SETTINGS, seed: decoded.success }) : null);
+	const error = $derived(Result.isFailure(decoded) ? 'Seed must be a whole number from 0 to 4294967295' : null);
 
 	let run: Run | null = $state(null);
 	let reference: Run | null = $state(null);
@@ -67,7 +65,7 @@
 	</nav>
 
 	{#if stage === 0 || !game}
-		<ConfigStep bind:form {game} {error} onnext={() => go(1)} />
+		<ConfigStep bind:seed {game} {error} onnext={() => go(1)} />
 	{:else if stage === 1}
 		<PromptStep {game} bind:response onback={() => go(0)} onrun={start} />
 	{:else if stage === 2 && run}

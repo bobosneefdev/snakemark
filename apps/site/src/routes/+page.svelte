@@ -19,7 +19,7 @@
 	});
 
 	const steps = [
-		['Generate', 'Pick a grid, an obstacle count and a seed. Same seed, same board, every time.'],
+		['Generate', 'Pick a seed. Every board is 32×32 with 256 obstacles and 512 food. Same seed, same board, every time.'],
 		['Reveal', 'The model sees everything up front: walls, its body, and every food that will ever spawn.'],
 		['Plan', 'It replies with one compressed string like 6L1R2L1L6. No retries, no feedback.'],
 		['Simulate', 'The plan runs deterministically. Score is food eaten before the first mistake.']

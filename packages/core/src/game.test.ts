@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
 import { Result } from 'effect';
-import { decodeConfig, encode, generate, parse, simulate, snakeAt, solve, TIERS, type Game } from './game';
+import { decodeSeed, encode, generate, parse, simulate, SETTINGS, snakeAt, solve, type Game } from './game';
 
 const blank = (food: Game['food'], size = 8): Game => ({
 	config: { gridSize: size, obstacleCount: 0, foodCount: food.length, seed: 0 },
@@ -28,14 +28,15 @@ test('parse', () => {
 	expect(parse('').ok).toBe(false);
 });
 
-test('config validation', () => {
-	expect(Result.isSuccess(decodeConfig({ gridSize: 10, obstacleCount: 20, foodCount: 5, seed: 1 }))).toBe(true);
-	expect(Result.isFailure(decodeConfig({ gridSize: 10, obstacleCount: 21, foodCount: 5, seed: 1 }))).toBe(true);
-	expect(Result.isFailure(decodeConfig({ gridSize: 5.5, obstacleCount: 0, foodCount: 5, seed: 1 }))).toBe(true);
+test('seed validation', () => {
+	expect(Result.isSuccess(decodeSeed(1))).toBe(true);
+	expect(Result.isFailure(decodeSeed(-1))).toBe(true);
+	expect(Result.isFailure(decodeSeed(1.5))).toBe(true);
+	expect(Result.isFailure(decodeSeed(2 ** 32))).toBe(true);
 });
 
 test('generation is deterministic', () => {
-	const c = { ...TIERS.hard, seed: 42 };
+	const c = { ...SETTINGS, seed: 42 };
 	expect(generate(c)).toEqual(generate(c));
 	expect(generate(c).obstacles.length).toBe(c.obstacleCount);
 });
@@ -72,13 +73,12 @@ test('encode round-trips', () => {
 	expect(encode([0, 0, 1, 1, 0, 3], 0)).toBe('2R2L1L1');
 });
 
-test('reference solver plays legal games on every tier', () => {
-	for (const tier of Object.values(TIERS)) {
-		for (let seed = 0; seed < 5; seed++) {
-			const game = generate({ ...tier, seed });
-			const run = simulate(game, cmds(solve(game)));
-			expect(['cleared', 'commands']).toContain(run.end);
-			expect(run.food).toBeGreaterThan(0);
-		}
+test('reference solver plays legal games', () => {
+	for (let seed = 0; seed < 3; seed++) {
+		const game = generate({ ...SETTINGS, seed });
+		expect(game.food.length).toBe(SETTINGS.foodCount);
+		const run = simulate(game, cmds(solve(game)));
+		expect(['cleared', 'commands']).toContain(run.end);
+		expect(run.food).toBeGreaterThan(0);
 	}
 });

@@ -81,11 +81,7 @@
 				take++;
 				go(2);
 			}}
-			onretry={() => {
-				response = '';
-				go(1);
-			}}
-			onnew={() => {
+			oncontinue={() => {
 				response = '';
 				go(0);
 			}}

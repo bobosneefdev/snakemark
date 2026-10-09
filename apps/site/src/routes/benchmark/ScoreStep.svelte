@@ -9,10 +9,9 @@
 		reference: Run;
 		response: string;
 		onreplay: () => void;
-		onretry: () => void;
-		onnew: () => void;
+		oncontinue: () => void;
 	}
-	let { run, reference, response, onreplay, onretry, onnew }: Props = $props();
+	let { run, reference, response, onreplay, oncontinue }: Props = $props();
 
 	const total = $derived(run.game.food.length);
 	const letter = $derived(grade(run, reference.food));
@@ -25,7 +24,6 @@
 	$effect(() => loadShader(() => import('#lib/Burst.svelte'), (c) => (Burst = c)));
 
 	let shown = $state(0);
-	let copied = $state(false);
 	let stage: HTMLElement | undefined = $state();
 
 	$effect(() => {
@@ -56,14 +54,6 @@
 		return () => anims.forEach((a) => a.stop());
 	});
 
-	function share() {
-		const { seed } = run.game.config;
-		const text = `SnakeBench seed ${seed}\nGrade ${letter}: ${run.food}/${total} food${crashed(run.end) ? `, scored ${points} after crashing` : ''} in ${run.steps} moves (${vsRef}% of reference)\n${END_LABELS[run.end]}`;
-		navigator.clipboard.writeText(text).then(() => {
-			copied = true;
-			setTimeout(() => (copied = false), 2000);
-		}, () => {});
-	}
 </script>
 
 <section bind:this={stage} class="flex flex-col items-center gap-10" aria-labelledby="score-title">
@@ -72,9 +62,9 @@
 			{#if Burst}<Burst color={rays} {great} />{/if}
 		</div>
 
-		<p data-label class="font-mono text-xs tracking-[0.3em] text-base-content/60 uppercase">Food collected</p>
-		<h1 id="score-title" class="text-[clamp(6rem,22vw,12rem)] leading-none font-semibold tracking-tighter tabular-nums">
-			{shown}<span class="text-[0.35em] text-base-content/40">/{total}</span>
+		<p data-label class="pl-[0.3em] font-mono text-xs tracking-[0.3em] text-base-content/60 uppercase">Food collected</p>
+		<h1 id="score-title" class="relative text-[clamp(6rem,22vw,12rem)] leading-none font-semibold tracking-tighter tabular-nums">
+			{shown}<span class="absolute bottom-[0.12em] left-full text-[0.35em] text-base-content/40">/{total}</span>
 		</h1>
 		<p data-label class="text-sm text-base-content/70">{END_LABELS[run.end]}</p>
 		{#if crashed(run.end)}
@@ -106,11 +96,9 @@
 
 	<div data-stat class="flex flex-wrap justify-center gap-3 opacity-0">
 		{#if run.end !== 'invalid'}
-			<button type="button" class="btn" onclick={onreplay}>Watch again</button>
+			<button type="button" class="btn" onclick={onreplay}>Replay</button>
 		{/if}
-		<button type="button" class="btn" onclick={share}>{copied ? 'Copied' : 'Copy result'}</button>
-		<button type="button" class="btn" onclick={onretry}>Try another model</button>
-		<button type="button" class="btn btn-primary" onclick={onnew}>New game</button>
+		<button type="button" class="btn btn-primary" onclick={oncontinue}>Continue</button>
 	</div>
 
 	{#if response.trim()}

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Board from '#lib/Board.svelte';
 	import { Playback } from '#lib/playback.svelte.js';
-	import { generate, parse, simulate, solve } from '@snakebench/core';
+	import { generate, parse, simulate, solve } from '@snakemark/core';
 
 	// A fixed demo game so the hero looks the same for everyone.
 	const game = generate({ gridSize: 14, obstacleCount: 14, foodCount: 20, seed: 2026 });
@@ -30,10 +30,10 @@
 </script>
 
 <svelte:head>
-	<title>SnakeBench: one-shot Snake planning for LLMs</title>
+	<title>Snakemark: one-shot Snake planning for LLMs</title>
 	<meta
 		name="description"
-		content="SnakeBench tests how well an LLM plans a whole game of Snake in one shot: long-horizon planning, spatial reasoning and state tracking with zero feedback."
+		content="Snakemark tests how well an LLM plans a whole game of Snake in one shot: long-horizon planning, spatial reasoning and state tracking with zero feedback."
 	/>
 </svelte:head>
 
@@ -44,7 +44,7 @@
 			Plan every move.<br /><span class="text-base-content/40">Before the first one.</span>
 		</h1>
 		<p data-reveal style="--i: 2" class="max-w-md text-lg text-pretty text-base-content/70">
-			SnakeBench gives a model the full map and every future food, then asks for the whole game as
+			Snakemark gives a model the full map and every future food, then asks for the whole game as
 			one string. No feedback. No second chances. Just planning.
 		</p>
 		<div data-reveal style="--i: 3" class="flex flex-wrap gap-3">

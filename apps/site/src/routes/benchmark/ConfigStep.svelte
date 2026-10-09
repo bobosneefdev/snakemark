@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Board from '#lib/Board.svelte';
-	import { randomSeed, type Game } from '@snakebench/core';
+	import { randomSeed, SETTINGS, type Game } from '@snakemark/core';
 
 	interface Props {
 		seed: number;
@@ -16,7 +16,7 @@
 		<header class="flex flex-col gap-2">
 			<h1 id="config-title" class="text-3xl font-semibold tracking-tight">Pick a seed</h1>
 			<p class="text-sm text-base-content/60">
-				Every game is a 32×32 board with 256 obstacles and 512 food. The seed is the only variable,
+				Every game is a {SETTINGS.gridSize}×{SETTINGS.gridSize} board with {SETTINGS.obstacleCount} obstacles and {SETTINGS.foodCount} food. The seed is the only variable,
 				so the same seed always builds the same board and every result on it is directly comparable.
 			</p>
 		</header>

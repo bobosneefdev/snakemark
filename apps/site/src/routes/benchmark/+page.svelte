@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { Result } from 'effect';
-	import { decodeSeed, generate, parse, SETTINGS, simulate, solve, type Run } from '@snakebench/core';
+	import { decodeSeed, generate, parse, SETTINGS, simulate, solve, type Run } from '@snakemark/core';
 	import ConfigStep from './ConfigStep.svelte';
 	import PromptStep from './PromptStep.svelte';
 	import PlayStep from './PlayStep.svelte';
@@ -14,7 +14,7 @@
 	let response = $state('');
 
 	// persist the seed across reloads; loaded after mount so prerendered markup hydrates cleanly
-	const SEED_KEY = 'snakebench:seed';
+	const SEED_KEY = 'snakemark:seed';
 	onMount(() => {
 		const saved = Number(localStorage.getItem(SEED_KEY) ?? NaN);
 		if (Result.isSuccess(decodeSeed(saved))) seed = saved;
@@ -49,8 +49,8 @@
 </script>
 
 <svelte:head>
-	<title>Benchmark · SnakeBench</title>
-	<meta name="description" content="Generate a SnakeBench game, prompt your LLM, and watch its one-shot plan play out." />
+	<title>Benchmark · Snakemark</title>
+	<meta name="description" content="Generate a Snakemark game, prompt your LLM, and watch its one-shot plan play out." />
 </svelte:head>
 
 <div class="flex flex-col gap-10 pt-4 pb-10">

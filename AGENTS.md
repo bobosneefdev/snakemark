@@ -106,7 +106,7 @@ Core challenge for the LLM: Plan the entire game before making the first move.
 - Cloudflare for hosting
 
 ## Where it'll live
-- Cloudflare pages, hosted on snakebench.bobosneef.dev
+- Cloudflare pages, hosted on snakemark.bobosneef.dev
 
 ## Goal
 Build an absolutely sick website that will be the home of the benchmark. bobosneef.dev will eventually be my developer work portfolio, so this site can't disappoint, but should also feel refreshingly minimal. There should be 4 pages: home, benchmark, leaderboard, and docs.

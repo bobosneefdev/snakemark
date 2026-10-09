@@ -2,7 +2,7 @@
 	import { page } from '$app/state';
 </script>
 
-<svelte:head><title>{page.status} · SnakeBench</title></svelte:head>
+<svelte:head><title>{page.status} · Snakemark</title></svelte:head>
 
 <section class="flex flex-col items-center gap-4 py-32 text-center">
 	<p class="font-mono text-sm text-error">{page.status}</p>

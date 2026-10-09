@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { crashed, CRASH_PENALTY, END_LABELS, score } from '@snakebench/core';
+	import { crashed, CRASH_PENALTY, END_LABELS, score } from '@snakemark/core';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -13,8 +13,8 @@
 </script>
 
 <svelte:head>
-	<title>Leaderboard · SnakeBench</title>
-	<meta name="description" content="Free LLMs ranked on SnakeBench, benchmarked automatically every day on one private seed." />
+	<title>Leaderboard · Snakemark</title>
+	<meta name="description" content="Free LLMs ranked on Snakemark, benchmarked automatically every day on one private seed." />
 </svelte:head>
 
 <div class="flex flex-col gap-12 pt-4 pb-10">

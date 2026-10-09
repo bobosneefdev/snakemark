@@ -1,5 +1,5 @@
 {
-	"name": "snakebench",
+	"name": "snakemark",
 	"private": true,
 	"type": "module",
 	"packageManager": "bun@1.4.0",

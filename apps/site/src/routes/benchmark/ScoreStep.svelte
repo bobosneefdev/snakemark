@@ -2,7 +2,7 @@
 	import { animate, stagger } from 'motion';
 	import type { Component } from 'svelte';
 	import { loadShader } from '#lib/gpu.js';
-	import { crashed, CRASH_PENALTY, END_LABELS, grade, score, type Run } from '@snakebench/core';
+	import { crashed, CRASH_PENALTY, END_LABELS, grade, score, type Run } from '@snakemark/core';
 
 	interface Props {
 		run: Run;
@@ -58,7 +58,7 @@
 
 	function share() {
 		const { seed } = run.game.config;
-		const text = `SnakeBench seed ${seed}\nGrade ${letter}: ${run.food}/${total} food${crashed(run.end) ? `, scored ${points} after crashing` : ''} in ${run.steps} moves (${vsRef}% of reference)\n${END_LABELS[run.end]}`;
+		const text = `Snakemark seed ${seed}\nGrade ${letter}: ${run.food}/${total} food${crashed(run.end) ? `, scored ${points} after crashing` : ''} in ${run.steps} moves (${vsRef}% of reference)\n${END_LABELS[run.end]}`;
 		navigator.clipboard.writeText(text).then(() => {
 			copied = true;
 			setTimeout(() => (copied = false), 2000);

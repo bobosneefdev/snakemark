@@ -49,7 +49,7 @@ export const runSandboxed = Effect.fn('Sandbox.run')(function* (
 ) {
 	const fs = yield* FileSystem.FileSystem;
 	const path = yield* Path.Path;
-	const dir = yield* fs.makeTempDirectoryScoped({ prefix: 'snakebench-' });
+	const dir = yield* fs.makeTempDirectoryScoped({ prefix: 'snakemark-' });
 	yield* fs.makeDirectory(path.join(dir, 'home'));
 	yield* fs.makeDirectory(path.join(dir, 'work'));
 	yield* fs.writeFileString(path.join(dir, 'models.json'), catalog);

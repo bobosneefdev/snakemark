@@ -1,6 +1,6 @@
-import { SETTINGS } from '@snakebench/core';
-import { decodeResults, rank } from '@snakebench/core/results';
-import raw from '@snakebench/core/results.json';
+import { SETTINGS } from '@snakemark/core';
+import { decodeResults, rank } from '@snakemark/core/results';
+import raw from '@snakemark/core/results.json';
 
 // Runs only at prerender: raw responses stay in the repo and never reach the browser.
 export const load = () => {

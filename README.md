@@ -1,6 +1,6 @@
-# SnakeBench
+# Snakemark
 
-One-shot Snake planning benchmark for LLMs. Live at **https://snakebench.bobosneef.dev**.
+One-shot Snake planning benchmark for LLMs. Live at **https://snakemark.bobosneef.dev**.
 
 The model gets the full board and every future food, then must reply with one movement
 string (`6L1R2L1L6`). The site plays it back and scores it. See `/docs` on the site for

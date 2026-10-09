@@ -2,7 +2,7 @@
 	import { ToggleGroup } from 'bits-ui';
 	import Board from '#lib/Board.svelte';
 	import { Playback } from '#lib/playback.svelte.js';
-	import type { Run } from '@snakebench/core';
+	import type { Run } from '@snakemark/core';
 
 	let { run, ondone }: { run: Run; ondone: () => void } = $props();
 

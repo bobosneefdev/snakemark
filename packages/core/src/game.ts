@@ -12,7 +12,7 @@ const DY = [-1, 0, 1, 0] as const;
 const DIR_NAMES = ['UP (toward y−1)', 'RIGHT (toward x+1)', 'DOWN (toward y+1)', 'LEFT (toward x−1)'];
 
 /** Fixed for every game so results from the same seed are always comparable. Only the seed varies. */
-export const SETTINGS = { gridSize: 32, obstacleCount: 256, foodCount: 512 } as const;
+export const SETTINGS = { gridSize: 16, obstacleCount: 64, foodCount: 192 } as const;
 
 export interface Config {
 	gridSize: number;
@@ -450,7 +450,7 @@ const fmt = ([x, y]: Point) => `(${x},${y})`;
 export function buildPrompt(game: Game): string {
 	const { size, snake } = game;
 	const n = size - 1;
-	return `You are playing SnakeBench, a one-shot Snake planning benchmark.
+	return `You are playing Snakemark, a one-shot Snake planning benchmark.
 Plan the ENTIRE game before your first move. You will get no feedback and no chance to correct anything.
 This is a test of YOUR OWN reasoning. You must solve it without tools: see "No tools" below.
 

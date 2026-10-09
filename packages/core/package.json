@@ -1,5 +1,5 @@
 {
-	"name": "@snakebench/core",
+	"name": "@snakemark/core",
 	"private": true,
 	"type": "module",
 	"exports": {

@@ -7,12 +7,12 @@ import { BunRuntime, BunServices } from '@effect/platform-bun';
 import { Config, Duration, Effect, FileSystem, Option, Redacted, Result, Schema, Semaphore } from 'effect';
 import { FetchHttpClient, HttpClient } from 'effect/http';
 import { ChildProcess, ChildProcessSpawner } from 'effect/process';
-import { buildPrompt, decodeSeed, generate, grade, parse, simulate, solve, SETTINGS } from '@snakebench/core';
-import { decodeResults, entryKey, Results, type Entry, type Provider } from '@snakebench/core/results';
+import { buildPrompt, decodeSeed, generate, grade, parse, simulate, solve, SETTINGS } from '@snakemark/core';
+import { decodeResults, entryKey, Results, type Entry, type Provider } from '@snakemark/core/results';
 import { Catalog, candidates, readEvents, type Candidate } from './opencode';
 import { runSandboxed } from './sandbox';
 
-const RESULTS = Bun.resolveSync('@snakebench/core/results.json', import.meta.dir);
+const RESULTS = Bun.resolveSync('@snakemark/core/results.json', import.meta.dir);
 const CATALOG_URL = 'https://models.opencode.ai/api.json';
 
 const main = Effect.gen(function* () {

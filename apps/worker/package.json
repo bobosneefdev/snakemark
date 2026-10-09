@@ -1,5 +1,5 @@
 {
-	"name": "@snakebench/worker",
+	"name": "@snakemark/worker",
 	"private": true,
 	"type": "module",
 	"scripts": {
@@ -9,7 +9,7 @@
 	},
 	"dependencies": {
 		"@effect/platform-bun": "^4.0.2",
-		"@snakebench/core": "workspace:*",
+		"@snakemark/core": "workspace:*",
 		"effect": "^4.0.2"
 	},
 	"devDependencies": {

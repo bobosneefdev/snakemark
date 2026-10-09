@@ -1,5 +1,5 @@
 import { Option, Schema } from 'effect';
-import { Provider } from '@snakebench/core/results';
+import { Provider } from '@snakemark/core/results';
 
 /** The slice of OpenCode's model catalog (models.opencode.ai/api.json, a models.dev mirror) we use. */
 const CatalogModel = Schema.Struct({

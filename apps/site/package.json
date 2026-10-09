@@ -1,5 +1,5 @@
 {
-	"name": "@snakebench/site",
+	"name": "@snakemark/site",
 	"private": true,
 	"version": "0.0.1",
 	"type": "module",
@@ -37,6 +37,6 @@
 		"effect": "^4.0.2",
 		"motion": "^14.0.0",
 		"shaders": "^4.0.3",
-		"@snakebench/core": "workspace:*"
+		"@snakemark/core": "workspace:*"
 	}
 }

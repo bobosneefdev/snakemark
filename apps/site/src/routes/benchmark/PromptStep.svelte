@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { buildPrompt, parse, type Game } from '@snakebench/core';
+	import { buildPrompt, parse, type Game } from '@snakemark/core';
 
 	interface Props {
 		game: Game;

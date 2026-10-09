@@ -3,18 +3,18 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "snakebench",
+      "name": "snakemark",
       "devDependencies": {
         "turbo": "^2.11.7",
       },
     },
     "apps/site": {
-      "name": "@snakebench/site",
+      "name": "@snakemark/site",
       "version": "0.0.1",
       "dependencies": {
         "@fontsource-variable/geist": "^5.3.0",
         "@fontsource-variable/geist-mono": "^5.3.0",
-        "@snakebench/core": "workspace:*",
+        "@snakemark/core": "workspace:*",
         "bits-ui": "^2.19.5",
         "effect": "^4.0.2",
         "motion": "^14.0.0",
@@ -36,10 +36,10 @@
       },
     },
     "apps/worker": {
-      "name": "@snakebench/worker",
+      "name": "@snakemark/worker",
       "dependencies": {
         "@effect/platform-bun": "^4.0.2",
-        "@snakebench/core": "workspace:*",
+        "@snakemark/core": "workspace:*",
         "effect": "^4.0.2",
       },
       "devDependencies": {
@@ -48,7 +48,7 @@
       },
     },
     "packages/core": {
-      "name": "@snakebench/core",
+      "name": "@snakemark/core",
       "dependencies": {
         "effect": "^4.0.2",
       },
@@ -253,11 +253,11 @@
 
     "@sindresorhus/is": ["@sindresorhus/is@7.2.0", "", {}, "sha512-P1Cz1dWaFfR4IR+U13mqqiGsLFf1KbayybWwdd2vfctdV6hDpUkgCY0nKOLLTMSoRd/jJNjtbqzf13K8DCCXQw=="],
 
-    "@snakebench/core": ["@snakebench/core@workspace:packages/core"],
+    "@snakemark/core": ["@snakemark/core@workspace:packages/core"],
 
-    "@snakebench/site": ["@snakebench/site@workspace:apps/site"],
+    "@snakemark/site": ["@snakemark/site@workspace:apps/site"],
 
-    "@snakebench/worker": ["@snakebench/worker@workspace:apps/worker"],
+    "@snakemark/worker": ["@snakemark/worker@workspace:apps/worker"],
 
     "@speed-highlight/core": ["@speed-highlight/core@1.2.24", "", {}, "sha512-qeW2e1l78afw8VhRPfPQ1Gjj+KU5XFQ/OFV5ti6eTa9bruO7mJyZtA4vw0ofqmA3tKCkROE9xLk3VZoeRc98nw=="],
 

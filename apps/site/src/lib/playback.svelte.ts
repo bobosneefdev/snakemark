@@ -1,5 +1,5 @@
 import { untrack } from 'svelte';
-import { snakeAt, type Point, type Run } from '@snakebench/core';
+import { snakeAt, type Point, type Run } from '@snakemark/core';
 
 /**
  * Drives a Run at the display's native refresh rate: requestAnimationFrame fires once per

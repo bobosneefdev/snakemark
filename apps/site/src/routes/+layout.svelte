@@ -44,7 +44,7 @@
 					<path d="M2 2h8v4H6v2h8v6H2v-4h8V8H2z" />
 				</svg>
 			</span>
-			snakebench
+			snakemark
 		</a>
 		<nav aria-label="Main">
 			<ul class="flex gap-0.5 text-sm sm:gap-1">

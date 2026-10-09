@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { CRASH_PENALTY, SETTINGS } from '@snakebench/core';
+	import { CRASH_PENALTY, SETTINGS } from '@snakemark/core';
 
 	const toc = [
 		['overview', 'Overview'],
@@ -15,8 +15,8 @@
 </script>
 
 <svelte:head>
-	<title>Docs · SnakeBench</title>
-	<meta name="description" content="Rules, command syntax, edge cases and scoring for SnakeBench." />
+	<title>Docs · Snakemark</title>
+	<meta name="description" content="Rules, command syntax, edge cases and scoring for Snakemark." />
 </svelte:head>
 
 <div class="grid gap-12 pt-4 pb-10 lg:grid-cols-[12rem_1fr]">
@@ -34,7 +34,7 @@
 		<section id="overview">
 			<h1 class="mb-4 text-4xl font-semibold tracking-tight">Docs</h1>
 			<p>
-				SnakeBench measures how well a language model plans a long sequence of actions with no
+				Snakemark measures how well a language model plans a long sequence of actions with no
 				feedback. The model sees a whole Snake game up front, the board, the walls, its body and the
 				full ordered list of food that will ever spawn, and must answer with one movement string. The
 				simulator then plays that string exactly as written.

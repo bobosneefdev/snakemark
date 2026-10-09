@@ -84,6 +84,7 @@
 				<li><strong>Death.</strong> Leaving the grid, entering an obstacle, or entering your own body ends the game immediately. The fatal move does not count.</li>
 				<li><strong>Running out.</strong> The game also ends when commands are exhausted, all food is eaten, or the move limit (<code>food × grid × 4</code>) is reached.</li>
 				<li><strong>Malformed responses</strong> score 0 food and an F. Nothing is guessed or repaired.</li>
+				<li><strong>No tools.</strong> The model must plan by reasoning alone. The prompt forbids writing or running code, solvers, simulators, search or any other tool. Run it with tools and code execution turned off. A tool-assisted answer is not a valid result.</li>
 				<li><strong>Trailing turns</strong> after the last move are allowed and do nothing.</li>
 			</ul>
 		</section>

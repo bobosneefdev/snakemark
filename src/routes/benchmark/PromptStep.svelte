@@ -36,7 +36,8 @@
 			<h1 id="prompt-title" class="text-3xl font-semibold tracking-tight">Hand it to your model</h1>
 			<p class="text-sm text-base-content/60">
 				Paste this into any LLM in a fresh chat. It contains the full board, every future food, and
-				the rules. Nothing else is needed.
+				the rules. Nothing else is needed. Turn off code execution, web search and other tools first:
+				the model must plan by reasoning alone.
 			</p>
 		</header>
 		<button type="button" class="btn btn-primary btn-lg" onclick={copy} aria-live="polite">

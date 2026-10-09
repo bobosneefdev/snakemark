@@ -441,6 +441,7 @@ export function buildPrompt(game: Game): string {
 	const n = size - 1;
 	return `You are playing SnakeBench, a one-shot Snake planning benchmark.
 Plan the ENTIRE game before your first move. You will get no feedback and no chance to correct anything.
+This is a test of YOUR OWN reasoning. You must solve it without tools: see "No tools" below.
 
 ## Board
 - Grid: ${size}×${size}. Cells are (x,y). x grows to the right (0…${n}), y grows downward (0…${n}). (0,0) is the top-left cell.
@@ -465,6 +466,12 @@ ${game.food.map((p, i) => `${i + 1}. ${fmt(p)}`).join('\n')}
 - A positive integer N: move forward N cells.
 - L: turn 90° left. R: turn 90° right. Turns are relative to the current facing and do not move the snake. Facing UP, L faces LEFT and R faces RIGHT.
 - Example: 3R2L5 means forward 3, turn right, forward 2, turn left, forward 5.
+
+## No tools
+- Do NOT write, run or execute code of any kind: no scripts, no solvers, no simulators, no code interpreter, no sandbox.
+- Do NOT use any tool, plugin, search, external program or other model to plan, check, simulate or refine your answer.
+- Work everything out by reasoning alone. You may think step by step, but only in your own reasoning, never by running anything.
+- An answer produced or checked with any tool is disqualified, even if it scores well.
 
 ## Goal
 Eat as many foods as possible, in order. Fewer moves breaks ties.

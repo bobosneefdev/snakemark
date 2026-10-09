@@ -17,7 +17,7 @@ const int = (minimum: number, maximum: number) => Schema.Int.check(Schema.isBetw
 export const Config = Schema.Struct({
 	gridSize: int(6, 32),
 	obstacleCount: int(0, maxObstacles(32)),
-	foodCount: int(1, 100),
+	foodCount: int(1, 256),
 	seed: int(0, 2 ** 32 - 1)
 }).check(
 	Schema.makeFilter(
@@ -33,7 +33,7 @@ export const TIERS = {
 	easy: { gridSize: 18, obstacleCount: 36, foodCount: 35 },
 	medium: { gridSize: 24, obstacleCount: 90, foodCount: 60 },
 	hard: { gridSize: 28, obstacleCount: 140, foodCount: 80 },
-	brutal: { gridSize: 32, obstacleCount: maxObstacles(32), foodCount: 100 }
+	brutal: { gridSize: 32, obstacleCount: maxObstacles(32), foodCount: 256 }
 } as const;
 export type Tier = keyof typeof TIERS;
 

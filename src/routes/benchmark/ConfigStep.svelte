@@ -85,7 +85,7 @@
 
 		{@render field('Grid size', form.gridSize, 6, 32, setGrid)}
 		{@render field('Obstacles', form.obstacleCount, 0, obstacleMax, (v) => (form.obstacleCount = v))}
-		{@render field('Food', form.foodCount, 1, 100, (v) => (form.foodCount = v))}
+		{@render field('Food', form.foodCount, 1, 256, (v) => (form.foodCount = v))}
 
 		<label class="flex flex-col gap-3">
 			<span class="text-sm text-base-content/70">Seed</span>

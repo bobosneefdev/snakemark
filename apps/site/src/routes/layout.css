@@ -45,6 +45,19 @@
 	--font-mono: 'Geist Mono Variable', ui-monospace, monospace;
 }
 
+/* CSS, not JS: runs from the first paint of the prerendered HTML, so nothing flashes on hydration */
+[data-reveal] {
+	animation: reveal 0.7s cubic-bezier(0.22, 1, 0.36, 1) calc(var(--i, 0) * 70ms) both;
+}
+
+@keyframes reveal {
+	from {
+		opacity: 0;
+		translate: 0 14px;
+		filter: blur(6px);
+	}
+}
+
 @keyframes fade {
 	from {
 		opacity: 0;
@@ -65,6 +78,7 @@ html {
 	*::before,
 	*::after {
 		animation-duration: 0.01ms !important;
+		animation-delay: 0ms !important;
 		transition-duration: 0.01ms !important;
 	}
 }

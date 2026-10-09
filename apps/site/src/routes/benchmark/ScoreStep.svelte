@@ -31,11 +31,12 @@
 	$effect(() => {
 		if (!stage) return;
 		const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const q = (s: string) => stage!.querySelectorAll<HTMLElement>(s);
 		if (reduced) {
 			shown = run.food;
+			q('[data-burst], [data-grade], [data-stat]').forEach((el) => (el.style.opacity = '1'));
 			return;
 		}
-		const q = (s: string) => stage!.querySelectorAll(s);
 		const count = animate(0, run.food, {
 			duration: Math.min(2.2, 0.6 + run.food * 0.05),
 			ease: [0.16, 1, 0.3, 1],

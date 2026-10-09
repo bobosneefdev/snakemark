@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Board from '#lib/Board.svelte';
 	import { Playback } from '#lib/playback.svelte.js';
-	import { reveal } from '#lib/reveal.js';
 	import { generate, parse, simulate, solve } from '@snakebench/core';
 
 	// A fixed demo game so the hero looks the same for everyone.
@@ -9,13 +8,17 @@
 	const parsed = parse(solve(game));
 	const run = simulate(game, parsed.ok ? parsed.commands : null);
 	const demo = new Playback(run, 14);
-	demo.onend = () => setTimeout(demo.play, 1500);
+	let again: ReturnType<typeof setTimeout> | undefined;
+	demo.onend = () => (again = setTimeout(demo.play, 1500));
 
 	$effect(() => {
 		const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
 		if (reduced) demo.position = run.steps;
 		else demo.play();
-		return demo.destroy;
+		return () => {
+			clearTimeout(again);
+			demo.destroy();
+		};
 	});
 
 	const steps = [
@@ -34,23 +37,23 @@
 	/>
 </svelte:head>
 
-<section class="grid items-center gap-12 pt-8 pb-20 lg:grid-cols-[1.1fr_1fr] lg:pt-16" {@attach reveal()}>
+<section class="grid items-center gap-12 pt-8 pb-20 lg:grid-cols-[1.1fr_1fr] lg:pt-16">
 	<div class="flex flex-col gap-6">
-		<p data-reveal class="badge badge-outline badge-sm font-mono text-primary">LLM benchmark</p>
-		<h1 data-reveal class="text-5xl leading-[0.95] font-semibold tracking-tighter text-balance sm:text-7xl">
+		<p data-reveal style="--i: 0" class="badge badge-outline badge-sm font-mono text-primary">LLM benchmark</p>
+		<h1 data-reveal style="--i: 1" class="text-5xl leading-[0.95] font-semibold tracking-tighter text-balance sm:text-7xl">
 			Plan every move.<br /><span class="text-base-content/40">Before the first one.</span>
 		</h1>
-		<p data-reveal class="max-w-md text-lg text-pretty text-base-content/70">
+		<p data-reveal style="--i: 2" class="max-w-md text-lg text-pretty text-base-content/70">
 			SnakeBench gives a model the full map and every future food, then asks for the whole game as
 			one string. No feedback. No second chances. Just planning.
 		</p>
-		<div data-reveal class="flex flex-wrap gap-3">
+		<div data-reveal style="--i: 3" class="flex flex-wrap gap-3">
 			<a href="/benchmark" class="btn btn-primary">Run the benchmark</a>
 			<a href="/docs" class="btn btn-ghost">How it works</a>
 		</div>
 	</div>
 
-	<figure data-reveal class="relative mx-auto w-full max-w-md">
+	<figure data-reveal style="--i: 4" class="relative mx-auto w-full max-w-md">
 		<div class="absolute -inset-8 -z-10 rounded-full bg-primary/10 blur-3xl"></div>
 		<Board
 			{game}

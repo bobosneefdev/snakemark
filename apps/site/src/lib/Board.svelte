@@ -145,6 +145,6 @@
 
 <svelte:window bind:devicePixelRatio={dpr} />
 
-<div bind:clientWidth={width} role="img" aria-label={label} class="aspect-square w-full overflow-hidden rounded-box ring-1 ring-base-300 {cls}">
+<div bind:clientWidth={width} role="img" aria-label={label} class="aspect-square w-full overflow-hidden rounded-box bg-base-200 ring-1 ring-base-300 {cls}">
 	<canvas bind:this={canvas} class="size-full" aria-hidden="true"></canvas>
 </div>

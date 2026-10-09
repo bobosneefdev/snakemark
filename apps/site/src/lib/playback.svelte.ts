@@ -1,3 +1,4 @@
+import { untrack } from 'svelte';
 import { snakeAt, type Point, type Run } from '@snakebench/core';
 
 /**
@@ -17,6 +18,7 @@ export class Playback {
 
 	#raf = 0;
 	#last = 0;
+	#dead = false;
 	#frames: number[] = [];
 
 	readonly run: Run;
@@ -40,8 +42,11 @@ export class Playback {
 		};
 	});
 
+	// untracked: calling play() inside an $effect must not subscribe it to `done`, or the
+	// effect re-runs when playback ends and rewinds to the start
 	play = () => {
-		if (this.done) this.position = 0;
+		if (this.#dead) return;
+		if (untrack(() => this.done)) this.position = 0;
 		this.playing = true;
 		this.#last = performance.now();
 		cancelAnimationFrame(this.#raf);
@@ -69,5 +74,9 @@ export class Playback {
 		this.#raf = requestAnimationFrame(this.#tick);
 	};
 
-	destroy = () => cancelAnimationFrame(this.#raf);
+	/** stops for good; a late play() (e.g. from a pending timer) is ignored */
+	destroy = () => {
+		this.#dead = true;
+		this.pause();
+	};
 }

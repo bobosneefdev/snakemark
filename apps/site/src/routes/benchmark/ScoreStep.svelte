@@ -2,7 +2,7 @@
 	import { animate, stagger } from 'motion';
 	import type { Component } from 'svelte';
 	import { loadShader } from '#lib/gpu.js';
-	import { END_LABELS, grade, type Run } from '@snakebench/core';
+	import { crashed, CRASH_PENALTY, END_LABELS, grade, score, type Run } from '@snakebench/core';
 
 	interface Props {
 		run: Run;
@@ -18,7 +18,8 @@
 	const letter = $derived(grade(run, reference.food));
 	const great = $derived(letter === 'S' || letter === 'A');
 	const rays = $derived(great ? '#9dff9a' : letter === 'F' ? '#ff6b5a' : '#ffd36b');
-	const vsRef = $derived(reference.food ? Math.round((run.food / reference.food) * 100) : 0);
+	const points = $derived(score(run));
+	const vsRef = $derived(reference.food ? Math.round((points / reference.food) * 100) : 0);
 
 	let Burst: Component<{ color: string; great: boolean }> | undefined = $state();
 	$effect(() => loadShader(() => import('#lib/Burst.svelte'), (c) => (Burst = c)));
@@ -57,7 +58,7 @@
 
 	function share() {
 		const { seed } = run.game.config;
-		const text = `SnakeBench seed ${seed}\nGrade ${letter}: ${run.food}/${total} food in ${run.steps} moves (${vsRef}% of reference)\n${END_LABELS[run.end]}`;
+		const text = `SnakeBench seed ${seed}\nGrade ${letter}: ${run.food}/${total} food${crashed(run.end) ? `, scored ${points} after crashing` : ''} in ${run.steps} moves (${vsRef}% of reference)\n${END_LABELS[run.end]}`;
 		navigator.clipboard.writeText(text).then(() => {
 			copied = true;
 			setTimeout(() => (copied = false), 2000);
@@ -76,6 +77,9 @@
 			{shown}<span class="text-[0.35em] text-base-content/40">/{total}</span>
 		</h1>
 		<p data-label class="text-sm text-base-content/70">{END_LABELS[run.end]}</p>
+		{#if crashed(run.end)}
+			<p data-label class="mt-1 font-mono text-xs text-error">Crash penalty: scored {points} ({CRASH_PENALTY * 100}%)</p>
+		{/if}
 
 		<div
 			data-grade

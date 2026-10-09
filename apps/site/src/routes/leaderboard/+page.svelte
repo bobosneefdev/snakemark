@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { END_LABELS } from '@snakebench/core';
+	import { crashed, CRASH_PENALTY, END_LABELS, score } from '@snakebench/core';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -49,7 +49,8 @@
 				<span class="badge badge-sm badge-outline font-mono">One shot</span>
 				<p class="mt-2 text-base-content/70">
 					Each model gets the exact prompt from the <a href="/benchmark" class="link">benchmark page</a>,
-					once. Its final answer is scored as-is. Bad output scores 0.
+					once. Its final answer is scored as-is. Bad output scores 0. Crashing keeps only
+					{CRASH_PENALTY * 100}% of the food.
 				</p>
 			</li>
 			<li class="rounded-box bg-base-200/70 p-4">
@@ -91,6 +92,7 @@
 									</div>
 									<div class="mt-1 text-xs text-base-content/40">
 										{e.timedOut ? 'Timed out' : END_LABELS[e.end]}
+										{#if crashed(e.end)}<span class="text-error/80">· scored {score(e)}</span>{/if}
 									</div>
 								</td>
 								<td class="text-right font-mono tabular-nums">{e.steps.toLocaleString()}</td>

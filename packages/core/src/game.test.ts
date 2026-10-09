@@ -1,6 +1,6 @@
 import { expect, test } from 'bun:test';
 import { Result } from 'effect';
-import { decodeSeed, encode, generate, parse, simulate, SETTINGS, snakeAt, solve, type Game } from './game';
+import { decodeSeed, grade, score, encode, generate, parse, simulate, SETTINGS, snakeAt, solve, type Game } from './game';
 
 const blank = (food: Game['food'], size = 8): Game => ({
 	config: { gridSize: size, obstacleCount: 0, foodCount: food.length, seed: 0 },
@@ -81,4 +81,12 @@ test('reference solver plays legal games', () => {
 		expect(['cleared', 'commands']).toContain(run.end);
 		expect(run.food).toBeGreaterThan(0);
 	}
+});
+
+test('crashing keeps 75% of the food, rounded down; running out is free', () => {
+	expect(score({ food: 10, end: 'wall' })).toBe(7);
+	expect(score({ food: 10, end: 'self' })).toBe(7);
+	expect(score({ food: 10, end: 'commands' })).toBe(10);
+	expect(grade({ food: 10, end: 'commands' }, 10)).toBe('A');
+	expect(grade({ food: 10, end: 'obstacle' }, 10)).toBe('B');
 });

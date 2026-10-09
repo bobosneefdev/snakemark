@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { SETTINGS } from '@snakebench/core';
+	import { CRASH_PENALTY, SETTINGS } from '@snakebench/core';
 
 	const toc = [
 		['overview', 'Overview'],
@@ -94,9 +94,10 @@
 			<h2>Scoring</h2>
 			<ul>
 				<li><strong>Food collected</strong> is the primary score.</li>
+				<li><strong>Crash penalty.</strong> Dying by wall, obstacle or own body keeps only {CRASH_PENALTY * 100}% of the food eaten, rounded down. Running out of commands is free, so a model should stop where it can no longer track the board instead of guessing. Grades, vs reference and the leaderboard all use this score.</li>
 				<li><strong>Moves survived</strong> counts every successful move.</li>
 				<li><strong>Efficiency</strong> is the sum of Manhattan distances between consecutive food pickups divided by the moves actually used to reach the last one. 100% means no detours at all, which walls and the body rarely allow.</li>
-				<li><strong>vs reference</strong> compares food collected to a built-in solver: BFS to each food, only taking paths that keep its tail reachable, otherwise following its tail until a safe path opens. It is a solid baseline, not an optimal player.</li>
+				<li><strong>vs reference</strong> compares the score to a built-in solver: BFS to each food, only taking paths that keep its tail reachable, otherwise following its tail until a safe path opens. It is a solid baseline, not an optimal player.</li>
 			</ul>
 			<div class="overflow-x-auto">
 				<table class="table table-sm">

@@ -421,10 +421,17 @@ export function encode(dirs: Dir[], start: Dir): string {
 export const Grade = Schema.Literals(['S', 'A', 'B', 'C', 'D', 'F']);
 export type Grade = typeof Grade.Type;
 
-export function grade(run: Run, referenceFood: number): Grade {
+/** Fraction of food kept after a crash, so stopping cleanly beats guessing past what you can track. */
+export const CRASH_PENALTY = 0.75;
+export const crashed = (end: EndReason) => end === 'wall' || end === 'obstacle' || end === 'self';
+/** Food collected, cut to 75% (rounded down) if the run ended in a crash. */
+export const score = (r: { food: number; end: EndReason }) =>
+	crashed(r.end) ? Math.floor(r.food * CRASH_PENALTY) : r.food;
+
+export function grade(run: { food: number; end: EndReason }, referenceFood: number): Grade {
 	if (run.end === 'invalid') return 'F';
 	if (run.end === 'cleared') return 'S';
-	const r = run.food / Math.max(1, referenceFood);
+	const r = score(run) / Math.max(1, referenceFood);
 	return r >= 0.9 ? 'A' : r >= 0.7 ? 'B' : r >= 0.5 ? 'C' : r >= 0.25 ? 'D' : 'F';
 }
 
@@ -465,6 +472,7 @@ ${game.food.map((p, i) => `${i + 1}. ${fmt(p)}`).join('\n')}
 - Death: moving off the grid, into an obstacle, or into your own body ends the game. The tail vacates its cell during a move, so entering the cell your tail occupies is safe, except on a move where you eat.
 - Food can appear under the snake's body. It is only eaten when the head enters its cell.
 - The game ends when you die, all food is eaten, your commands run out, or after ${game.moveLimit} moves.
+- Crashing is penalized: if you die, your score is ${CRASH_PENALTY * 100}% of the food you ate (rounded down). Running out of commands is not penalized, so stop when you are no longer sure a move is safe.
 
 ## Commands
 - A positive integer N: move forward N cells.
@@ -478,7 +486,7 @@ ${game.food.map((p, i) => `${i + 1}. ${fmt(p)}`).join('\n')}
 - An answer produced or checked with any tool is disqualified, even if it scores well.
 
 ## Goal
-Eat as many foods as possible, in order. Fewer moves breaks ties.
+Maximize your score: food eaten, minus the crash penalty. Fewer moves breaks ties.
 
 ## Output
 Reply with ONLY the command string, for example 3R2L5. No spaces, no explanation, no code fences.`;

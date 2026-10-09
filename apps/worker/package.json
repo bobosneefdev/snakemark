@@ -1,0 +1,19 @@
+{
+	"name": "@snakebench/worker",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"bench": "bun src/main.ts",
+		"test": "bun test",
+		"check": "tsc"
+	},
+	"dependencies": {
+		"@effect/platform-bun": "^4.0.2",
+		"@snakebench/core": "workspace:*",
+		"effect": "^4.0.2"
+	},
+	"devDependencies": {
+		"@types/bun": "^1.4.2",
+		"typescript": "^6.0.3"
+	}
+}

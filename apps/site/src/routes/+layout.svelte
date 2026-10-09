@@ -14,6 +14,7 @@
 	const links = [
 		['/', 'Home'],
 		['/benchmark', 'Benchmark'],
+		['/leaderboard', 'Leaderboard'],
 		['/docs', 'Docs']
 	] as const;
 </script>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { Game, Point } from './game';
+	import type { Game, Point } from '@snakebench/core';
 
 	interface Props {
 		game: Game;

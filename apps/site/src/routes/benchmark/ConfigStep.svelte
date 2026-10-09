@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Slider, ToggleGroup } from 'bits-ui';
 	import Board from '#lib/Board.svelte';
-	import { maxObstacles, randomSeed, TIERS, type Game, type Tier } from '#lib/game.js';
+	import { maxObstacles, randomSeed, TIERS, type Game, type Tier } from '@snakebench/core';
 
 	interface Props {
 		form: { gridSize: number; obstacleCount: number; foodCount: number; seed: number };

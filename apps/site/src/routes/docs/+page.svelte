@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { TIERS } from '#lib/game.js';
+	import { TIERS } from '@snakebench/core';
 
 	const toc = [
 		['overview', 'Overview'],
@@ -9,7 +9,8 @@
 		['rules', 'Rules and edge cases'],
 		['scoring', 'Scoring'],
 		['tiers', 'Difficulty tiers'],
-		['determinism', 'Determinism']
+		['determinism', 'Determinism'],
+		['leaderboard', 'Leaderboard runs']
 	] as const;
 </script>
 
@@ -141,6 +142,21 @@
 				seed, in a fresh conversation, with the prompt unchanged.
 			</p>
 		</section>
+
+		<section id="leaderboard">
+			<h2>Leaderboard runs</h2>
+			<p>
+				The <a href="/leaderboard">leaderboard</a> only lists results we collect ourselves. Once a day, every
+				free text model from NVIDIA, OpenCode Zen and OpenRouter that isn't on the board yet gets one
+				attempt.
+			</p>
+			<ul>
+				<li>Always the <strong>Brutal</strong> preset, with one fixed seed we keep private so nobody can tune against the board.</li>
+				<li>The prompt is exactly what the benchmark page copies. The model's final message is scored as-is.</li>
+				<li>The harness is stock OpenCode in a sandbox with no internet. Only the model's own API is reachable.</li>
+				<li>Runs over 15 minutes score as invalid. Provider errors are not recorded and are retried the next day.</li>
+			</ul>
+		</section>
 	</article>
 </div>
 
@@ -180,6 +196,11 @@
 	.prose-docs :global(strong) {
 		color: var(--color-base-content);
 		font-weight: 500;
+	}
+	.prose-docs :global(a) {
+		color: var(--color-primary);
+		text-decoration: underline;
+		text-underline-offset: 3px;
 	}
 	.prose-docs :global(code) {
 		font-family: var(--font-mono);

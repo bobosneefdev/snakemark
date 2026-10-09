@@ -33,7 +33,7 @@ jobs:
       # Stock OpenCode, pinned so every result on the board comes from the same harness.
       - name: Install OpenCode
         run: |
-          curl -fsSL https://opencode.ai/install | bash -s -- --version 2.0.23 --no-modify-path
+          curl -fsSL https://opencode.ai/install | bash -s -- --version 1.18.35 --no-modify-path
           echo "OPENCODE_BIN=$HOME/.opencode/bin/opencode" >> "$GITHUB_ENV"
 
       - run: bun install --frozen-lockfile

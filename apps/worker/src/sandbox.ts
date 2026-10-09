@@ -67,7 +67,7 @@ export const runSandboxed = Effect.fn('Sandbox.run')(function* (
 		'--ro-bind', process.execPath, '/opt/bun', '--ro-bind', bridge, '/opt/bridge.ts', '--ro-bind', opencode, '/opt/opencode',
 		'--chdir', '/sandbox/work',
 		'/opt/bun', '/opt/bridge.ts',
-		'/opt/opencode', 'run', '--standalone', '--format', 'json',
+		'/opt/opencode', 'run', '--format', 'json',
 		'--model', `${candidate.provider}/${candidate.model}`,
 		prompt
 	];
